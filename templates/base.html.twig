@@ -1,19 +1,52 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+<head>
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+    {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+    {% block stylesheets %}
+        <link rel="stylesheet" href="https://bootswatch.com/5/flatly/bootstrap.min.css">
+        <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('assets/script/script.js') }}" rel="stylesheet"/>
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+    {% block navbar %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary py-3 shadow-sm">
+            <div class="container"><a href="#" class="navbar-brand"> <b>SnowTricks</b></a>
+                <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+                        class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
+                <div id="navbarSupportedContent" class="collapse navbar-collapse">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active"><a href="#" class="nav-link">Accueil</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Tricks</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Connexion</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link">Inscription</a></li>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    {% endblock %}
+</head>
+<body>
+{% block body %}
+
+{% endblock %}
+</body>
+<footer class="bg-primary footer py-2 bottom">
+    <div class="container mh-100">
+        <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+            <div class="col-auto">
+                <div class="small m-0 text-white">Copyright &copy;Hédi Lannoo 2022</div>
+            </div>
+        </div>
+    </div>
+</footer>
 </html>
