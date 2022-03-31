@@ -26,18 +26,19 @@
         <div class="container pt-5">
             <div class="row d-flex justify-content-center" >
                 {% for trick in tricks %}
+                    {% for idImage in trick.idImages|slice(0,1) %}
                 <div class="col-lg-2 col-md-12 mb-3 pb-3">
                     <div class="card h-100 shadow border-0">
-                        <img class="card-img-top" src="{{ trick.image }}" alt="..." />
+                        <img class="card-img-top" src=" {{ idImage.path }}" alt="..." />
                         <div class="card-body p-2 ">
-                            <div class="badge bg-primary bg-gradient rounded-pill mb-2">{{ trick.denomination }}</div>
-                            <a class="text-decoration-none link-dark stretched-link" href="{{ trick.id }}">
-                                <div class="h5 card-title mb-3">{{ trick.title }}</div></a>
+                            <div class="badge bg-primary bg-gradient rounded-pill mb-2"></div>
                         </div>
                         <div class="card-footer p-2 pt-0 bg-transparent border-top-0">
                             <div class="d-flex align-items-end justify-content-between">
                                 <div class="d-flex align-items-center">
                                     <div class="small">
+                                        <a href="{{ path('trick_details',{'id': trick.id }) }}" class="btn btn-primary">
+                                            <div class="card-title mb-1">{{ trick.title }}</div></a>
                                         <div class="fw-bold"></div>
                                         <div class="text-muted">{{ trick.createdAt | date('d/m/Y') }}</div>
                                     </div>
@@ -46,6 +47,7 @@
                         </div>
                     </div>
                 </div>
+                    {% endfor %}
                 {% endfor %}
             </div>
         </div>
