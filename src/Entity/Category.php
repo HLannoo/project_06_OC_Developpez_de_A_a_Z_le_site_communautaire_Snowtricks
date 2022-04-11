@@ -16,12 +16,9 @@ class Category
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $title;
+    private $name;
 
-    #[ORM\Column(type: 'text', nullable: true)]
-    private $description;
-
-    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Tricks::class)]
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Trick::class)]
     private $tricks;
 
     public function __construct()
@@ -34,39 +31,27 @@ class Category
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getName(): ?string
     {
-        return $this->title;
+        return $this->name;
     }
 
-    public function setTitle(string $title): self
+    public function setName(string $name): self
     {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Tricks>
+     * @return Collection<int, Trick>
      */
     public function getTricks(): Collection
     {
         return $this->tricks;
     }
 
-    public function addTrick(Tricks $trick): self
+    public function addTrick(Trick $trick): self
     {
         if (!$this->tricks->contains($trick)) {
             $this->tricks[] = $trick;
@@ -76,7 +61,7 @@ class Category
         return $this;
     }
 
-    public function removeTrick(Tricks $trick): self
+    public function removeTrick(Trick $trick): self
     {
         if ($this->tricks->removeElement($trick)) {
             // set the owning side to null (unless already changed)

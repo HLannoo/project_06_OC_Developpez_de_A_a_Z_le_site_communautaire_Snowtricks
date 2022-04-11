@@ -2,30 +2,30 @@
 
 namespace App\Repository;
 
-use App\Entity\Comments;
+use App\Entity\Trick;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Comments|null find($id, $lockMode = null, $lockVersion = null)
- * @method Comments|null findOneBy(array $criteria, array $orderBy = null)
- * @method Comments[]    findAll()
- * @method Comments[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Trick|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Trick|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Trick[]    findAll()
+ * @method Trick[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CommentsRepository extends ServiceEntityRepository
+class TrickRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Comments::class);
+        parent::__construct($registry, Trick::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(Comments $entity, bool $flush = true): void
+    public function add(Trick $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -37,7 +37,7 @@ class CommentsRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(Comments $entity, bool $flush = true): void
+    public function remove(Trick $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {
@@ -46,15 +46,15 @@ class CommentsRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Comments[] Returns an array of Comments objects
+    //  * @return Trick[] Returns an array of Trick objects
     //  */
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
+            ->orderBy('t.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -63,10 +63,10 @@ class CommentsRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Comments
+    public function findOneBySomeField($value): ?Trick
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()
