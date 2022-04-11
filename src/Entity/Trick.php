@@ -21,7 +21,7 @@ class Trick
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $description;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $createdAt;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
@@ -48,6 +48,7 @@ class Trick
 
     public function __construct()
     {
+        $this->setCreatedAt();
         $this->images = new ArrayCollection();
         $this->videos = new ArrayCollection();
         $this->comments = new ArrayCollection();
@@ -87,9 +88,10 @@ class Trick
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(): self
     {
-        $this->createdAt = $createdAt;
+        if ($this->createdAt == null) $this->createdAt = new \DateTime('now');
+
 
         return $this;
     }
@@ -101,7 +103,7 @@ class Trick
 
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = new \DateTime('now');
 
         return $this;
     }
