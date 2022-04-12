@@ -30,7 +30,8 @@ class Trick
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $slug;
 
-    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Image::class, orphanRemoval: true)]
+
+    #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Image::class, orphanRemoval: true, cascade: ["persist"])]
     private $images;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Video::class)]
@@ -137,6 +138,13 @@ class Trick
 
         return $this;
     }
+
+    public function removeAllImages() : self
+    {
+        $this->images = new ArrayCollection();
+        return $this;
+    }
+
 
     public function removeImage(Image $image): self
     {

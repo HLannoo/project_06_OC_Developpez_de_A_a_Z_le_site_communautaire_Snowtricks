@@ -12,21 +12,67 @@
         {{ form_row(form.name) }}
         {{ form_row(form.description) }}
         {{ form_row(form.category) }}
-        {{ form_row(form.images) }}
-        {{ form_row(form.videos) }}
 
-
-        <div class="form-group">
-            <div class="row">
-                <div class="col-sm-6">
-                </div>
-                <div class="col-sm-6">
-                </div>
-            </div>
+        <div id="images" data-prototype="{{ form_row(form.images.vars.prototype)|e('html_attr')}}">
+            {{ form_row(form.images)}}
+            <span class="span-image"></span>
         </div>
+        <br/>
 
         <button type="submit" class="btn btn-primary btn-lg col-3"><i class="fas fa-check"></i> Créer le nouveau trick !</button>
 
         {{ form_end(form) }}
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        let collection, boutonAjout, span;
+        window.onload =() => {
+            collection = document.querySelector("#images");
+            span = collection.querySelector(".span-image");
+            boutonAjout = document.createElement("button");
+            boutonAjout.className = "ajout-image btn-primary";
+            boutonAjout.innerText = "Ajouter une image";
+
+            let nouveauBouton = span.append(boutonAjout);
+
+            collection.dataset.index = collection.querySelectorAll("input").length;
+            boutonAjout.addEventListener("click", function() {
+                addButton(collection, nouveauBouton)
+            })
+        }
+
+        function addButton(collection, nouveauBouton ){
+            let prototype = collection.dataset.prototype;
+
+            let index = collection.dataset.index;
+            console.log(prototype);
+
+            prototype = prototype.replace(/__name__/g, index);
+            console.log(prototype);
+
+            let content = document.createElement("html");
+            content.innerHTML = prototype;
+            let newForm = content.querySelector("div");
+
+            let boutonSuppr = document.createElement("button");
+            boutonSuppr.type="button";
+            boutonSuppr.className = "btn-red";
+            boutonSuppr.id = "delete-image-" + index;
+            boutonSuppr.innerText = "supprimer cette image";
+
+            newForm.append(boutonSuppr);
+
+            collection.dataset.index++;
+
+            let boutonAjout = collection.querySelector(".ajout-image");
+
+            span.insertBefore(newForm, boutonAjout);
+
+            boutonSuppr.addEventListener("click", function(){
+                this.previousElementSibling.parentElement.remove();
+            })
+
+        }
+    </script>
 {% endblock %}

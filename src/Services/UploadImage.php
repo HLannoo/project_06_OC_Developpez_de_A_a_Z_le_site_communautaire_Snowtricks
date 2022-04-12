@@ -2,18 +2,18 @@
 
 namespace App\Services;
 
-use App\Entity\Trick;
+use App\Entity\Image;
 
 class UploadImage
 {
-    public function imageRegister($image)
+    public function imageRegister($file)
     {
-
-        $name = md5(uniqid()).'.'.$image->guessExtension();
+        $name = md5(uniqid()).'.'.$file->guessExtension();
 
         $path ='uploads/tricks' ;
+        $file->move($path,$name);
 
-        return $image->move($path,$name);
+        return $name;
 
 
 
