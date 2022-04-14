@@ -12,13 +12,13 @@
         {{ form_row(form.name) }}
         {{ form_row(form.description) }}
         {{ form_row(form.category) }}
+        {{ form_row(form.images)}}
+        <button type="button" class="btn btn-primary" id="new-image">Ajout image</button>
 
-        <div id="images" data-prototype="{{ form_row(form.images.vars.prototype)|e('html_attr')}}">
-            {{ form_row(form.images)}}
-            <span class="span-image"></span>
-        </div>
+        {{ form_row(form.videos)}}
+        <button type="button" class="btn btn-primary" id="new-video">Ajout video</button>
         <br/>
-
+        <br/>
         <button type="submit" class="btn btn-primary btn-lg col-3"><i class="fas fa-check"></i> Créer le nouveau trick !</button>
 
         {{ form_end(form) }}
@@ -26,53 +26,36 @@
 {% endblock %}
 {% block javascripts %}
     <script>
-        let collection, boutonAjout, span;
         window.onload =() => {
-            collection = document.querySelector("#images");
-            span = collection.querySelector(".span-image");
-            boutonAjout = document.createElement("button");
-            boutonAjout.className = "ajout-image btn-primary";
-            boutonAjout.innerText = "Ajouter une image";
+            //add image
+            const ImageCollectionHolder = document.querySelector('#trick_images');
 
-            let nouveauBouton = span.append(boutonAjout);
+            let indexImage = ImageCollectionHolder.querySelectorAll("fieldset").length;
 
-            collection.dataset.index = collection.querySelectorAll("input").length;
-            boutonAjout.addEventListener("click", function() {
-                addButton(collection, nouveauBouton)
-            })
+            const addImage = () => {
+
+                ImageCollectionHolder.innerHTML += ImageCollectionHolder.dataset.prototype.replace(/__name__/g, indexImage);
+                indexImage++;
+            };
+
+            document.querySelector('#new-image').addEventListener("click", addImage);
+
+
+            //add video
+
+            const VideoCollectionHolder = document.querySelector('#trick_videos');
+
+            let indexVideo = VideoCollectionHolder.querySelectorAll("fieldset").length;
+
+            const addVideo = () => {
+
+                VideoCollectionHolder.innerHTML += VideoCollectionHolder.dataset.prototype.replace(/__name__/g, indexVideo);
+                indexVideo++;
+            };
+
+            document.querySelector('#new-video').addEventListener("click", addVideo);
         }
 
-        function addButton(collection, nouveauBouton ){
-            let prototype = collection.dataset.prototype;
-
-            let index = collection.dataset.index;
-            console.log(prototype);
-
-            prototype = prototype.replace(/__name__/g, index);
-            console.log(prototype);
-
-            let content = document.createElement("html");
-            content.innerHTML = prototype;
-            let newForm = content.querySelector("div");
-
-            let boutonSuppr = document.createElement("button");
-            boutonSuppr.type="button";
-            boutonSuppr.className = "btn-red";
-            boutonSuppr.id = "delete-image-" + index;
-            boutonSuppr.innerText = "supprimer cette image";
-
-            newForm.append(boutonSuppr);
-
-            collection.dataset.index++;
-
-            let boutonAjout = collection.querySelector(".ajout-image");
-
-            span.insertBefore(newForm, boutonAjout);
-
-            boutonSuppr.addEventListener("click", function(){
-                this.previousElementSibling.parentElement.remove();
-            })
-
-        }
     </script>
+
 {% endblock %}

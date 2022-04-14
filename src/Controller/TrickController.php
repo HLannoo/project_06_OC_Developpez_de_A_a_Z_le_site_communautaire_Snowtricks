@@ -26,8 +26,8 @@ class TrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $trick = $form->getData();
-            $trick->setCategory($form->get('category')->getData());
 
+            $trick->setCategory($form->get('category')->getData());
             $trick->removeAllImages();
             foreach($request->files->get('trick')['images'] as $file) {
                 $resultImage = $uploadImage->imageRegister($file['path']);
@@ -37,9 +37,14 @@ class TrickController extends AbstractController
                 $trick->addImage($image);
 
 
+                foreach($form->get('videos')->getData() as $url) {
+                    $trick->addVideo($url);
+
+                }
             }
             $manager->persist($trick);
             $manager->flush();
+
         }
         return $this->render('trick/create.html.twig', [
             'form' => $form->createView()

@@ -6,7 +6,13 @@
     <header class="masthead">
         <div class="container">
         {% for image in trick.images|slice(0,1) %}
-        <style>.masthead { background-image: url('{{ image.path}}');}</style>
+        <style>
+            .masthead
+            {
+                background-image: url({{ asset('/uploads/tricks/' ~ image.path)}})
+
+            ;}
+        </style>
         {% endfor %}
         <div class="container h-100">
             <div class="row h-100 align-items-center">
@@ -19,7 +25,6 @@
     </header>
 {% endblock %}
 {% block body %}
-{# Carrousels image et video #}
     <section id="galerie">
         <div class="container">
             <div class="raw col-12 ">
