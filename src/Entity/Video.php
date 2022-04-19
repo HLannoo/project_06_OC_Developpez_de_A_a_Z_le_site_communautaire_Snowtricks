@@ -13,7 +13,7 @@ class Video
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'text', length: 5000)]
     private $url;
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'videos')]

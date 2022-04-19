@@ -4,6 +4,9 @@ namespace App\Entity;
 
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 class Image
@@ -13,8 +16,7 @@ class Image
     #[ORM\Column(type: 'integer')]
     private $id;
 
-
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255 )]
     private $path;
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'images')]

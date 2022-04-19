@@ -26,31 +26,52 @@ class TrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $trick = $form->getData();
-            $dataImg = $form->get('images')->getData();
-            $register = $uploadImage->imageRegister($dataImg);
-
 
             $trick->setCategory($form->get('category')->getData());
+            $trick->removeAllImages();
+            foreach($request->files->get('trick')['images'] as $file) {
+                $resultImage = $uploadImage->imageRegister($file['path']);
+                $image = new Image();
+                $image->setPath($resultImage)
+                    ->setTrick($trick);
+                $trick->addImage($image);
+
+
+                foreach($form->get('videos')->getData() as $url) {
+                    $trick->addVideo($url);
+
+                }
+            }
             $manager->persist($trick);
-
-            $image = new Image();
-            $image->setPath($register->getPathname());
-            $image->setTrick($trick);
-            $manager->persist($image);
-
-            $video = new Video();
-            $video->setUrl($request->get('trick')['videos']);
-            $video->setTrick($trick);
-            $manager->persist($video);
-
             $manager->flush();
-
+            $this->addFlash(
+                'success',
+                'Le trick <strong>' . $trick->getName() . '</strong> a bien été ajouté !'
+            );
+            return $this->redirectToRoute('app_blog');
 
         }
         return $this->render('trick/create.html.twig', [
             'form' => $form->createView()
         ]);
     }
+
+    #[Route('/trick/edit/{id}', name:'trick_edit')]
+    public function edit($id, TrickRepository $trickRepository, EntityManagerInterface $manager): Response
+    {
+        $trick = $trickRepository->find($id);
+        $form = $this->createForm(TrickType::class,$trick);
+
+        $manager->flush();
+
+        return $this->render('trick/update.html.twig', [
+            'controller_name' => 'TrickController',
+            'trick'=>$trick,
+            'form' => $form->createView()
+        ]);
+
+    }
+
 
     #[Route('/trick/{id}', name: 'trick_details')]
     public function show(TrickRepository $tricksRepo, $id): Response
