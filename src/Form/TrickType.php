@@ -32,6 +32,7 @@ class TrickType extends AbstractType
                 'allow_add'=>true,
                 'allow_delete'=>true,
                 'by_reference'=>false,
+                'required' => false
 
             ])
 
@@ -42,6 +43,7 @@ class TrickType extends AbstractType
                 'allow_add'=>true,
                 'allow_delete'=>true,
                 'by_reference'=>false,
+                'required' => false
 
             ])
         ;
