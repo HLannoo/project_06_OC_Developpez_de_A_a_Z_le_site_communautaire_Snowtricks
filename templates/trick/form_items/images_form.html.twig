@@ -1,0 +1,11 @@
+{{ form_widget(form._token) }}
+    <div class="form-group">
+        {% for image in trick.images %}
+            <div class="col-lg-2 col-md-3 mb-3 pb-3">
+                <img class="card-img-top" src="{{ asset('/uploads/tricks/' ~ image.path) }}" alt="..."/>
+                <a type="button" href="{{ path('image_delete',{id:image.id}) }}">Supprimer l'image</a>
+            </div>
+        {% endfor %}
+
+        {{ form_row(form.images) }}
+    </div>

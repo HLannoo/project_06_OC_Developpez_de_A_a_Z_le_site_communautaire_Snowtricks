@@ -1,60 +1,67 @@
 {{ form_widget(form._token) }}
+
             {{ form_row(form.name) }}
+
             {{ form_row(form.description) }}
+
             {{ form_row(form.category) }}
 
-<button type="button" class="btn btn-primary btn-new" data-collection='#images'>Ajouter image</button>
+{% if app.request.attributes.get('_route')=='trick_edit' %}
+    <div class="col-lg-2 col-md-3 mb-3 pb-3">
+        <img class="card-img-top" src="{{ asset('/uploads/tricks/' ~ trick.mainImage) }}" alt="..."/>
+        <a type="button" href="">Supprimer l'image</a>
+    </div>
+{% endif %}
 
-<div
-        id="images"
-        class="row"
-        data-prototype="{{ include('trick/form_items/image_form.html.twig',{form: form.images.vars.prototype})|e ('html_attr') }}"
-        data-index="{{ form.images|length >0 ? form.images|last.vars.name +1 : 0}}">
+            {{ form_row(form.mainImage) }}
 
-    {% for image in form.images %}
-        {{ include("trick/form_items/image_form.html.twig",{form: image }) }}
+           {% if app.request.attributes.get('_route')=='trick_edit' %}
+               {% for image in trick.images %}
+                   <div class="col-lg-2 col-md-3 mb-3 pb-3">
+                       <img class="card-img-top" src="{{ asset('/uploads/tricks/' ~ image.path) }}" alt="..."/>
+                       <a type="button" href="{{ path('image_delete',{id:image.id}) }}">Supprimer l'image</a>
+                   </div>
+               {% endfor %}
+           {% endif %}
 
-    {% endfor %}
-</div>
+{{ form_row(form.images) }}
 
 <button type="button" class="btn btn-primary btn-new" data-collection='#videos'>Ajouter video</button>
 
 <div
         id="videos"
         class="row"
-        data-prototype="{{ include("trick/form_items/video_form.html.twig",{form: form.videos.vars.prototype})|e ("html_attr") }}"
-        data-index="{{ form.videos|length >0 ? form.videos|last.vars.name +1 : 0}}">
+        data-prototype="{{ include("trick/form_items/delete_form.html.twig",{form: form.videos.vars.prototype})|e ("html_attr") }}"
+        data-index="{{ form.videos|length >0 ? form.videos|last.vars.name +1 : 0 }}">
     <br/>
 
     {% for video in form.videos %}
-        {{ include("trick/form_items/video_form.html.twig",{form: video }) }}
+        {{ form_row(video.url ) }}
     {% endfor %}
-
 </div>
+
 {% block javascripts %}
     <script>
-        window.onload =() => {
+        window.onload = () => {
             const newItem = (e) => {
                 const collectionHolder = document.querySelector(e.currentTarget.dataset.collection);
 
                 const item = document.createElement("div");
                 item.classList.add("col-4");
                 item.innerHTML = collectionHolder
-                    .dataset.
-                    prototype.
-                    replace(
+                    .dataset.prototype.replace(
                         /__name__/g,
                         collectionHolder.dataset.index
                     );
-                item.querySelector(".btn-remove").addEventListener("click",()=>item.remove());
+                item.querySelector(".btn-remove").addEventListener("click", () => item.remove());
 
                 collectionHolder.appendChild(item);
 
                 collectionHolder.dataset.index++
             };
-            document.querySelectorAll('.btn-remove').forEach(btn=>btn.addEventListener("click",(e)=>e.currentTarget.closest("col-4").remove()));
+            document.querySelectorAll('.btn-remove').forEach(btn => btn.addEventListener("click", (e) => e.currentTarget.closest("col-4").remove()));
 
-            document.querySelectorAll('.btn-new').forEach(btn=>btn.addEventListener("click",newItem));
+            document.querySelectorAll('.btn-new').forEach(btn => btn.addEventListener("click", newItem));
         }
 
     </script>

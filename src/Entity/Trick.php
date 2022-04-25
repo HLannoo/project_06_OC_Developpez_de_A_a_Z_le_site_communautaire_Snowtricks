@@ -15,7 +15,7 @@ class Trick
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $name;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -32,9 +32,11 @@ class Trick
 
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Image::class, orphanRemoval: true, cascade: ["persist"])]
+    #[ORM\JoinColumn(nullable: true)]
     private $images;
 
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Video::class,orphanRemoval: true, cascade: ["persist"])]
+    #[ORM\JoinColumn(nullable: true)]
     private $videos;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'tricks')]
@@ -46,6 +48,9 @@ class Trick
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tricks')]
     private $user;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $mainImage;
 
     public function __construct()
     {
@@ -238,6 +243,18 @@ class Trick
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getMainImage(): ?string
+    {
+        return $this->mainImage;
+    }
+
+    public function setMainImage(?string $mainImage): self
+    {
+        $this->mainImage = $mainImage;
 
         return $this;
     }

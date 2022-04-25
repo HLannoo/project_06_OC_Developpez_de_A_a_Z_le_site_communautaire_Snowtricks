@@ -8,6 +8,7 @@ class UploadImage
 {
     public function imageRegister($file)
     {
+
         $name = md5(uniqid()).'.'.$file->guessExtension();
 
         $path ='uploads/tricks' ;
