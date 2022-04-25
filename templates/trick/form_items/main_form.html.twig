@@ -1,0 +1,8 @@
+{{ form_widget(form._token) }}
+    <div class="form-group">
+        <div class="col-lg-2 col-md-3 mb-3 pb-3">
+            <img class="card-img-top" src="{{ asset('/uploads/tricks/' ~ trick.mainImage) }}" alt="..."/>
+            <a type="button" href="">Supprimer l'image</a>
+        </div>
+        {{ form_row(form.mainImage) }}
+    </div>

@@ -16,7 +16,7 @@ class Image
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255 )]
+    #[ORM\Column(type: 'string', length: 255, nullable: true )]
     private $path;
 
     #[ORM\ManyToOne(targetEntity: Trick::class, inversedBy: 'images')]
@@ -34,7 +34,7 @@ class Image
         return $this->path;
     }
 
-    public function setPath(string $path): self
+    public function setPath(?string $path): self
     {
         $this->path = $path;
 
