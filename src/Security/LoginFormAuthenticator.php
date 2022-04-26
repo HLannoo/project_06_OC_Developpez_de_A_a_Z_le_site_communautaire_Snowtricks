@@ -12,21 +12,10 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class LoginFormAuthenticator extends AbstractAuthenticator
 
 {
-    use TargetPathTrait;
-
-    public const LOGIN_ROUTE = 'security_login';
-
-    private UrlGeneratorInterface $urlGenerator;
-
-    public function __construct(UrlGeneratorInterface $urlGenerator)
-    {
-        $this->urlGenerator = $urlGenerator;
-    }
 
     public function supports(Request $request): ?bool
     {
@@ -44,7 +33,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator
             new UserBadge($email),
             new PasswordCredentials($request->request->all('login')['password']),
             [
-                new CsrfTokenBadge('authenticate', $request->request->all('login')['_token']),
+                new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
             ]
         );
     }
