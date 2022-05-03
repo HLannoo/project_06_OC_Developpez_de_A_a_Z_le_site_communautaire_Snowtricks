@@ -2,11 +2,14 @@
 
 namespace App\Security;
 
+
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
@@ -16,6 +19,12 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 class LoginFormAuthenticator extends AbstractAuthenticator
 
 {
+    private UrlGeneratorInterface $urlGenerator;
+
+    public function __construct(UrlGeneratorInterface $urlGenerator)
+    {
+        $this->urlGenerator = $urlGenerator;
+    }
 
     public function supports(Request $request): ?bool
     {
@@ -27,25 +36,30 @@ class LoginFormAuthenticator extends AbstractAuthenticator
     public function authenticate(Request $request): Passport
     {
 
-        $email = $request->request->all('login')['email'];
+
+
+        $email = $request->get('login')['email'];
 
         return new Passport(
             new UserBadge($email),
-            new PasswordCredentials($request->request->all('login')['password']),
+            new PasswordCredentials($request->get('login')['password']),
             [
-                new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
+                new CsrfTokenBadge('authenticate',$request->get('_csrf_token'))
             ]
         );
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        dd('succes');
+        return new RedirectResponse($this->urlGenerator->generate('app_blog'));
+
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
+
     {
-        dd('Failure',$exception);
+        return $request->getSession()->set(Security::AUTHENTICATION_ERROR,$exception);
+
     }
 
 //    public function start(Request $request, AuthenticationException $authException = null): Response

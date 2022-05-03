@@ -6,12 +6,14 @@
     <header class="masthead">
         <div class="container">
             <div class="d-flex flex-row-reverse">
+                {%  if app.user %}
                 <a href="" class="btn btn-sm btn-primary p-2 fs-2 mb-3">
                     <i class="bi bi-trash"></i>
                 </a>
                 <a href="{{ path("trick_edit",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2 fs-2 mb-3">
                     <i class="bi bi-pencil-square"></i>
                 </a>
+                {% endif %}
             </div>
         {% for image in trick.images|slice(0,1) %}
         <style>
@@ -21,17 +23,21 @@
 
             ;}
         </style>
+            {%  if app.user %}
             <a href="{{ path("trick_edit_main",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2">
                 <i class="bi bi-pencil-square"></i>
             </a>
+            {% endif %}
         {% endfor %}
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12 text-center">
                     <h1 class="fw-light">{{ trick.name }}
+                        {%  if app.user %}
                         <a href="{{ path("trick_edit_name",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2">
                             <i class="bi bi-pencil-square"></i>
                         </a>
+                        {% endif %}
                     </h1>
                 </div>
             </div>
@@ -45,9 +51,11 @@
             <div class="row col-6 ">
                 <h2
                         class="text-center">Les tricks en image
+                    {%  if app.user %}
                     <a href="{{ path("trick_edit_images",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2">
                         <i class="bi bi-pencil-square"></i>
                     </a>
+                    {% endif %}
 
                 </h2>
 
@@ -62,9 +70,11 @@
             <div class="row d-flex align-items-end col-6">
                 <h2
                         class="text-center">Les tricks en vidéo
+                    {%  if app.user %}
                     <a href="{{ path("trick_edit_videos",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2">
                         <i class="bi bi-pencil-square"></i>
                     </a>
+                    {% endif %}
                 </h2>
                 {% for video in trick.videos %}
                     <div class="col-lg-4 col-md-12 mb-3 pb-3">
@@ -88,9 +98,11 @@
     <div class="container">
         <p>
             {{ trick.description}}
+            {%  if app.user %}
             <a href="{{ path("trick_edit_description",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2">
                 <i class="bi bi-pencil-square"></i>
             </a>
+            {% endif %}
 
         </p>
     </div>
@@ -104,9 +116,11 @@
             </p>
             <p>
                 {{ trick.category.name}}
+                {%  if app.user %}
                 <a href="{{ path("trick_edit_category",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2">
                     <i class="bi bi-pencil-square"></i>
                 </a>
+                {% endif %}
             </p>
             <br/>
             <HR>

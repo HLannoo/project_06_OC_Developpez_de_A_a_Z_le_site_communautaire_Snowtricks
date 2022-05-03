@@ -13,7 +13,6 @@ class IndexController extends AbstractController
     #[Route('/', name: 'app_blog')]
     public function index(TrickRepository $tricksRepo): Response
     {
-
         $tricks = $tricksRepo->findAll();
         return $this->render('blog/index.html.twig', [
             'controller_name' => 'IndexController',
