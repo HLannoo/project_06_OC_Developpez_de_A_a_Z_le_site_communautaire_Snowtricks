@@ -20,6 +20,7 @@ class UserFixtures extends Fixture
 
 
             $user = new User();
+
             $hash = $this->hasher->hashPassword($user,'test123');
             $user->setPseudo('Kayoken')
                 ->setEmail('hedilannoo@gmail.com')
