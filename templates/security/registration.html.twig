@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme formView 'bootstrap_5_layout.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    <div class="container w-auto">
+        <h1>Inscription</h1>
+        {% for message in app.flashes('success') %}
+        <div class="alert alert-success flash-notice">
+            {{ message }}
+        </div>
+        {% endfor %}
+
+            {{ form_start(formView) }}
+            {{ form_widget(formView) }}
+
+            <button type="submit" class="'btn btn-success">inscription</button>
+
+            {{ form_end(formView) }}
+    </div>
+{% endblock %}

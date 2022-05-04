@@ -16,6 +16,13 @@
                         <div class="w-100 text-white">
                             <h1 class="display-1">SnowTricks</h1>
                             <p class="lead mb-0">a way to Freedom</p>
+                            {% for label, messages in app.flashes (['error','success'])%}
+                            {% for message in messages %}
+                            <div class="flash-{{ label }} ">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>

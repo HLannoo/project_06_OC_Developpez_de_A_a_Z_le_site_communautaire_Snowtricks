@@ -15,20 +15,19 @@
 
     {% endblock %}
     {% block navbar %}
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary py-3 shadow-sm">
-            <div class="container"><a href="#" class="navbar-brand"> <b>SnowTricks</b></a>
+        <nav class="navbar navbar-expand-lg text-align-right navbar-dark bg-primary py-3 shadow-sm">
+            <div class="container"><a href="{{ path('app_blog')}}" class="navbar-brand"> <b>SnowTricks</b></a>
                 <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
                         class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
                 <div id="navbarSupportedContent" class="collapse navbar-collapse">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item active"><a href="{{ path('app_blog')}}" class="nav-link">Accueil</a></li>
-                        {%  if app.user %}
+                        {%  if app.user and app.user.isVerified == true %}
                             <li class="nav-item"><a href="{{ path('trick_create')}}" class="nav-link">Créer un Tricks</a></li>
-                            <li class="nav-item btn-danger"><a href="{{ path('security_logout')}}" class="nav-link">Déconnexion</a></li>
+                            <li class="nav-item btn-dark rounded"><a href="{{ path('security_logout')}}" class="nav-link">Déconnexion</a></li>
                         {% else %}
                         <li class="nav-item"><a href="{{ path('security_login')}}" class="nav-link">Connexion</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link">Inscription</a></li>
+                        <li class="nav-item"><a href="{{ path('security_registration')}}" class="nav-link">Inscription</a></li>
                         </li>
                         {% endif %}
                     </ul>
@@ -36,6 +35,14 @@
             </div>
         </nav>
     {% endblock %}
+    {% if app.user and app.user.isVerified == false %}
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <div class="alert-message">
+                <strong>Votre compte n'est pas activé, vérifiez votre boite e-mail</strong>
+            </div>
+        </div>
+    {% endif %}
 </head>
 <body>
 {% block header %}
