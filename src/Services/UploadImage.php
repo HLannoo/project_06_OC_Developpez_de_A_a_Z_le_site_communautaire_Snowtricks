@@ -21,4 +21,18 @@ class UploadImage
 
     }
 
+    public function profilImageRegister($file)
+    {
+
+        $name = md5(uniqid()).'.'.$file->guessExtension();
+
+        $path ='uploads/profil' ;
+        $file->move($path,$name);
+
+        return $name;
+
+
+
+
+    }
 }

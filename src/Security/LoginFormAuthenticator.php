@@ -3,6 +3,7 @@
 namespace App\Security;
 
 
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,16 +36,13 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-
-
-
         $email = $request->get('login')['email'];
 
         return new Passport(
             new UserBadge($email),
             new PasswordCredentials($request->get('login')['password']),
             [
-                new CsrfTokenBadge('authenticate',$request->get('_csrf_token'))
+                new CsrfTokenBadge('authenticate', $request->get('_csrf_token'))
             ]
         );
     }
