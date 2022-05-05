@@ -62,6 +62,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 
 //    public function start(Request $request, AuthenticationException $authException = null): Response
 //    {
+// https://symfony.com/doc/current/security/access_denied_handler.html
 //        /*
 //         * If you would like this class to control what happens when an anonymous user accesses a
 //         * protected page (e.g. redirect to /login), uncomment this method and make this class

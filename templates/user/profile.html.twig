@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme FormProfile 'bootstrap_5_layout.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+    <div class="container-xl px-4 mt-4">
+        <nav class="nav nav-borders">
+            <a class="nav-link active ms-0" href="https://www.bootdey.com/snippets/view/bs5-edit-profile-account-details" target="__blank">Mon profil</a>
+            <a class="nav-link" href="https://www.bootdey.com/snippets/view/bs5-profile-billing-page" target="__blank">Sécurité</a>
+        </nav>
+        <hr class="mt-0 mb-4">
+        {% for label, messages in app.flashes (['error','success'])%}
+            {% for message in messages %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <div class="alert-message">
+                        <div class="flash-{{ label }} ">
+                            {{ message }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <div class="row">
+
+            <div class="col-xl-4">
+                <!-- Profile picture card-->
+                <div class="card mb-4 mb-xl-0">
+                    <div class="card-header">Image de profil</div>
+                    <div class="card-body text-center">
+                        {{ form_start(FormProfile) }}
+                        <!-- Profile picture image-->
+                        <img class="img-account-profile card-img w-75  rounded-circle mb-2" src="{{ asset('/uploads/profil/' ~ user.image) }}" alt="">
+                        <button class="btn btn-primary" type="button">{{ form_row(FormProfile.mainImage) }}</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-8">
+
+                <div class="card mb-4">
+                    <div class="card-header">Détails du compte</div>
+                    <div class="card-body">
+
+                                {{ form_row(FormProfile.pseudo) }}
+
+                                {{ form_row(FormProfile.email) }}
+                                <button type="submit" class="'btn btn-primary rounded">Enregistrer les changements</button>
+
+                                {{ form_end(FormProfile) }}
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+{% endblock %}

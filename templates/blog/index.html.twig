@@ -47,9 +47,11 @@
                                             <div class="card-title mb-1">{{ trick.name }}</div></a>
                                         <div class="fw-bold"></div>
                                         <div class="text-muted">{{ trick.createdAt | date('d/m/Y') }}</div>
+                                        {%  if app.user and app.user.isVerified == true %}
                                         <a href="{{ path("trick_edit",{'id': trick.id}) }}" class="btn btn-sm btn-primary">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

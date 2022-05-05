@@ -41,6 +41,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
+    public function __construct()
+    {
+        $this->roles = ['ROLE_GUEST'];
+    }
+
 
     public function getId(): ?int
     {
@@ -75,7 +80,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        $roles[] = 'ROLE_USER';
+        $roles[] = 'ROLE_GUEST';
 
         return array_unique($roles);
     }
