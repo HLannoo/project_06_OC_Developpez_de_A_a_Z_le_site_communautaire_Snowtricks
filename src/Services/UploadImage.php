@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Entity\Image;
-
 class UploadImage
 {
     public function imageRegister($file)
@@ -16,14 +14,10 @@ class UploadImage
 
         return $name;
 
-
-
-
     }
 
     public function profilImageRegister($file)
     {
-
         $name = md5(uniqid()).'.'.$file->guessExtension();
 
         $path ='uploads/profil' ;

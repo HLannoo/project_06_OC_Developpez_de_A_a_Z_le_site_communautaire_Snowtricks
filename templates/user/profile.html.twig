@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme FormProfile 'bootstrap_5_layout.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+    <div class="container-xl px-4 mt-4">
+        <nav class="nav nav-borders">
+            <a class="nav-link active ms-0" href="https://www.bootdey.com/snippets/view/bs5-edit-profile-account-details" target="__blank">Mon profil</a>
+            <a class="nav-link" href="https://www.bootdey.com/snippets/view/bs5-profile-billing-page" target="__blank">Sécurité</a>
+        </nav>
+        <hr class="mt-0 mb-4">
+        <div class="row">
+            <div class="col-xl-4">
+                <!-- Profile picture card-->
+                <div class="card mb-4 mb-xl-0">
+                    <div class="card-header">Image de profile</div>
+                    <div class="card-body text-center">
+                        <!-- Profile picture image-->
+                        <img class="img-account-profile rounded-circle mb-2" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                        <!-- Profile picture help block-->
+                        <div class="small font-italic text-muted mb-4">Fichier image MAX 8Mo</div>
+                        <!-- Profile picture upload button-->
+                        <button class="btn btn-primary" type="button">Uploader une nouvelle image</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-8">
+                <!-- Account details card-->
+                <div class="card mb-4">
+                    <div class="card-header">Détails du compte</div>
+                    <div class="card-body">
+                        <form>
+                            <!-- Form Group (username)-->
+                            <div class="mb-3">
+                                {{ form_start(FormProfile) }}
+                                {{ form_row(FormProfile.pseudo) }}
+                            </div>
+                            <!-- Form Row        -->
+                            <div class="row gx-3 mb-3">
+                            <!-- Form Group (email address)-->
+                            <div class="mb-3">
+                                {{ form_row(FormProfile.email) }}
+                            </div>
+
+                            <!-- Save changes button-->
+                                <button type="submit" class="'btn btn-primary rounded">Enregistrer les changements</button>
+                                {{ form_end(FormProfile) }}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

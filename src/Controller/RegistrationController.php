@@ -6,6 +6,8 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
 use App\Security\LoginFormAuthenticator;
+use App\Services\ChangeRoles;
+use App\Services\UploadImage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,20 +30,22 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'security_registration')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager, UploadImage $uploadImage): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $user->setPassword(
             $userPasswordHasher->hashPassword(
                     $user,
                     $form->get('plainPassword')->getData()
                 )
             );
+            $mainImage = $form->get('mainImage')->getData();
+            $resultImage = $uploadImage->profilImageRegister($mainImage);
+            $user->setImage($resultImage);
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -53,7 +57,6 @@ class RegistrationController extends AbstractController
                     ->subject('Merci de confirmer votre e-mail')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
-
                  return $userAuthenticator->authenticateUser(
                      $user,
                      $authenticator,
@@ -67,7 +70,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
+    public function verifyUserEmail(Request $request, TranslatorInterface $translator, ChangeRoles $roles,EntityManagerInterface $manager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
@@ -79,7 +82,7 @@ class RegistrationController extends AbstractController
 
             return $this->redirectToRoute('security_registration');
         }
-
+        $roles->upgradeGuest($this->getUser(),$manager);
         $this->addFlash('success', 'Votre e-mail a bien été vérifié');
 
         return $this->redirectToRoute('security_login');

@@ -24,6 +24,7 @@
                     <ul class="navbar-nav ml-auto">
                         {%  if app.user and app.user.isVerified == true %}
                             <li class="nav-item"><a href="{{ path('trick_create')}}" class="nav-link">Créer un Tricks</a></li>
+
                             <li class="nav-item btn-dark rounded"><a href="{{ path('security_logout')}}" class="nav-link">Déconnexion</a></li>
                         {% else %}
                         <li class="nav-item"><a href="{{ path('security_login')}}" class="nav-link">Connexion</a></li>
