@@ -23,6 +23,8 @@ class UploadImage
         $path ='uploads/profil' ;
         $file->move($path,$name);
 
+
+
         return $name;
 
 

@@ -15,10 +15,11 @@ class Trick
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: 'string', length: 85, nullable: true, unique: true)]
     private $name;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+
     private $description;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
