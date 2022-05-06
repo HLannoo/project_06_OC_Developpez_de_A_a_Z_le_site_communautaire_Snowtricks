@@ -43,8 +43,12 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
-            $mainImage = $form->get('mainImage')->getData();
-            $resultImage = $uploadImage->profilImageRegister($mainImage);
+            if (!empty($mainImage = $form->get('mainImage')->getData())) {
+                $resultImage = $uploadImage->profilImageRegister($mainImage);
+            }
+            else {
+                $resultImage = "unknow.jpg";
+            }
             $user->setImage($resultImage);
 
             $entityManager->persist($user);

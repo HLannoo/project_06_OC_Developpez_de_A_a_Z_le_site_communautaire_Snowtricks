@@ -24,7 +24,6 @@ class UploadImage
         $file->move($path,$name);
 
 
-
         return $name;
 
 

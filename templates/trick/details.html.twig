@@ -15,11 +15,11 @@
                 </a>
                 {% endif %}
             </div>
-        {% for image in trick.images|slice(0,1) %}
+
         <style>
             .masthead
             {
-                background-image: url({{ asset('/uploads/tricks/' ~ trick.mainimage)}})
+                background-image: url({{ asset('/uploads/tricks/' ~ trick.mainImage )}})
 
             ;}
         </style>
@@ -28,7 +28,7 @@
                 <i class="bi bi-pencil-square"></i>
             </a>
             {% endif %}
-        {% endfor %}
+
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12 text-center">

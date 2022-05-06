@@ -24,8 +24,12 @@
             {{ form_row(formView.password) }}
 
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-            <button type="submit" class="'btn btn-success">Connexion</button>
+            <button type="submit" class="'btn btn-primary">Connexion</button>
 
             {{ form_end(formView) }}
+        <div class="d-flex flex-column align-items-end m-50">
+            <a href="{{ path('app_forgot_password_request')}}" class="nav-link text-success">Mot de passe oublié</a>
+        </div>
     </div>
+
 {% endblock %}
