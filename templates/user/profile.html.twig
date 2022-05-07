@@ -7,8 +7,8 @@
 {% block body %}
     <div class="container-xl px-4 mt-4">
         <nav class="nav nav-borders">
-            <a class="nav-link active ms-0" href="https://www.bootdey.com/snippets/view/bs5-edit-profile-account-details" target="__blank">Mon profil</a>
-            <a class="nav-link" href="https://www.bootdey.com/snippets/view/bs5-profile-billing-page" target="__blank">Sécurité</a>
+            <a class="nav-link active ms-0" href="{{ path('user_profile',{'id': app.user.id})}}" >Mon profil</a>
+            <a class="nav-link" href="{{ path('app_forgot_password_request')}}">Sécurité</a>
         </nav>
         <hr class="mt-0 mb-4">
         {% for label, messages in app.flashes (['error','success'])%}
