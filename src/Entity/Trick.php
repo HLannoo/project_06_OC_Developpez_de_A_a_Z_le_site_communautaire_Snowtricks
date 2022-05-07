@@ -50,6 +50,10 @@ class Trick
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $mainImage;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tricks')]
+    #[ORM\JoinColumn(nullable: true)]
+    private $user;
+
     public function __construct()
     {
         $this->setCreatedAt();
@@ -241,6 +245,18 @@ class Trick
     public function setMainImage(?string $mainImage): self
     {
         $this->mainImage = $mainImage;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
