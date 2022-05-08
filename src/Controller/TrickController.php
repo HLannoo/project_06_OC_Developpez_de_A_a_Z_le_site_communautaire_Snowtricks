@@ -337,9 +337,12 @@ class TrickController extends AbstractController
         $fileSystem = new Filesystem();
         $imagesDir = $kernel->getProjectDir() . '/public/uploads/tricks/';
 
+        $mainImage = $trick->getMainImage();
+        unlink($imagesDir . $mainImage);
+
         foreach ($trick->getImages() as $image)
         {
-            $fileSystem->remove($imagesDir . $image->getPath());
+            unlink($imagesDir . $image->getPath());
         }
         foreach ($trick->getComments() as $comment)
         {
