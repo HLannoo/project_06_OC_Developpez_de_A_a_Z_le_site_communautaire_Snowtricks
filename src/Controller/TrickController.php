@@ -2,12 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Image;
 use App\Entity\Trick;
+use App\Form\CommentType;
 use App\Form\TrickType;
+use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
 use App\Services\UploadImage;
+use ContainerMsjMSmk\getUserInterfaceService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -100,13 +105,31 @@ class TrickController extends AbstractController
     }
 
     #[Route('/trick/{id}', name: 'trick_details')]
-    public function show(TrickRepository $tricksRepo, $id): Response
+    public function show(Request $request,TrickRepository $tricksRepo, EntityManagerInterface $manager, $id, CommentRepository $commentsRepo ): Response
     {
         $trick = $tricksRepo->findOneById($id);
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $comment->setCreatedAt(new \DateTime());
+            $comment->setTrick($trick);
+            $comment->setUser($this->getUser());
+
+            $manager->persist($comment);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'Votre commentaire a bien été enregistré !'
+            );
+        }
 
         return $this->render('trick/details.html.twig', [
-            'controller_name' => 'TrickController',
             'trick' => $trick,
+            'commentForm'=>$form->createView()
         ]);
 
     }
@@ -292,7 +315,7 @@ class TrickController extends AbstractController
     }
 
     #[Route('user/trick/delete/mainimage', name: 'main_image_delete')]
-    public function deleteMainImage($id, Trick $trick, Request $request, EntityManagerInterface $em, KernelInterface $kernel, TrickRepository $tricksRepo): response
+    public function deleteMainImage( Trick $trick, Request $request, EntityManagerInterface $em, KernelInterface $kernel, TrickRepository $tricksRepo): response
     {
         $nom = $trick->getMainImage();
         $imagesDir = $kernel->getProjectDir() . '/public/uploads/tricks/';
@@ -304,6 +327,37 @@ class TrickController extends AbstractController
         $route = $request->headers->get('referer');
 
         return $this->redirectToRoute($route);
+
+    }
+
+    #[Route('user/trick/delete/{id}', name: 'trick_delete')]
+    public function deleteTrick( EntityManagerInterface $manager, TrickRepository $tricksRepo, KernelInterface $kernel, $id): response
+    {
+        $trick = $tricksRepo->find($id);
+        $fileSystem = new Filesystem();
+        $imagesDir = $kernel->getProjectDir() . '/public/uploads/tricks/';
+
+        $mainImage = $trick->getMainImage();
+        unlink($imagesDir . $mainImage);
+
+        foreach ($trick->getImages() as $image)
+        {
+            unlink($imagesDir . $image->getPath());
+        }
+        foreach ($trick->getComments() as $comment)
+        {
+            $manager->remove($comment);
+        }
+
+        $manager->remove($trick);
+        $manager->flush();
+
+        $this->addflash(
+            'success',
+            "Le trick {$trick->getName()} a été supprimé avec succès !"
+        );
+
+        return $this->redirectToRoute('app_blog');
 
     }
 

@@ -16,13 +16,6 @@
                         <div class="w-100 text-white">
                             <h1 class="display-1">SnowTricks</h1>
                             <p class="lead mb-0">a way to Freedom</p>
-                            {% for label, messages in app.flashes (['error','success'])%}
-                            {% for message in messages %}
-                            <div class="flash-{{ label }} ">
-                                {{ message }}
-                            </div>
-                            {% endfor %}
-                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -51,6 +44,9 @@
                                         <a href="{{ path("trick_edit",{'id': trick.id}) }}" class="btn btn-sm btn-primary">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
+                                            <a href="{{ path("trick_delete",{'id': trick.id}) }}" class="btn btn-sm btn-primary" onclick="return confirm('Attention ! Ceci va supprimer le trick')">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
                                         {% endif %}
                                     </div>
                                 </div>
