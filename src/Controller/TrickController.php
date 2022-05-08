@@ -12,6 +12,7 @@ use App\Repository\TrickRepository;
 use App\Services\UploadImage;
 use ContainerMsjMSmk\getUserInterfaceService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -314,7 +315,7 @@ class TrickController extends AbstractController
     }
 
     #[Route('user/trick/delete/mainimage', name: 'main_image_delete')]
-    public function deleteMainImage($id, Trick $trick, Request $request, EntityManagerInterface $em, KernelInterface $kernel, TrickRepository $tricksRepo): response
+    public function deleteMainImage( Trick $trick, Request $request, EntityManagerInterface $em, KernelInterface $kernel, TrickRepository $tricksRepo): response
     {
         $nom = $trick->getMainImage();
         $imagesDir = $kernel->getProjectDir() . '/public/uploads/tricks/';
@@ -326,6 +327,34 @@ class TrickController extends AbstractController
         $route = $request->headers->get('referer');
 
         return $this->redirectToRoute($route);
+
+    }
+
+    #[Route('user/trick/delete/{id}', name: 'trick_delete')]
+    public function deleteTrick( EntityManagerInterface $manager, TrickRepository $tricksRepo, KernelInterface $kernel, $id): response
+    {
+        $trick = $tricksRepo->find($id);
+        $fileSystem = new Filesystem();
+        $imagesDir = $kernel->getProjectDir() . '/public/uploads/tricks/';
+
+        foreach ($trick->getImages() as $image)
+        {
+            $fileSystem->remove($imagesDir . $image->getPath());
+        }
+        foreach ($trick->getComments() as $comment)
+        {
+            $manager->remove($comment);
+        }
+
+        $manager->remove($trick);
+        $manager->flush();
+
+        $this->addflash(
+            'success',
+            "Le trick {$trick->getName()} a été supprimé avec succès !"
+        );
+
+        return $this->redirectToRoute('app_blog');
 
     }
 
