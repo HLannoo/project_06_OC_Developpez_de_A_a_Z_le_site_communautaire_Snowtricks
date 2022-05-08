@@ -44,6 +44,9 @@
                                         <a href="{{ path("trick_edit",{'id': trick.id}) }}" class="btn btn-sm btn-primary">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
+                                            <a href="{{ path("trick_delete",{'id': trick.id}) }}" class="btn btn-sm btn-primary" onclick="return confirm('Attention ! Ceci va supprimer le trick')">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
                                         {% endif %}
                                     </div>
                                 </div>
