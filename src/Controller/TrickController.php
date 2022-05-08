@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use \App\Entity\User;
 
 
 class TrickController extends AbstractController
@@ -31,9 +32,9 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            $trick->setUser($this->getUser());
             $trick = $form->getData();
-
+            
             $trick->setCategory($form->get('category')->getData());
 
             $mainImage = $form->get('mainImage')->getData();
@@ -105,7 +106,7 @@ class TrickController extends AbstractController
     }
 
     #[Route('/trick/{id}', name: 'trick_details')]
-    public function show(Request $request,TrickRepository $tricksRepo, EntityManagerInterface $manager, $id, CommentRepository $commentsRepo ): Response
+    public function show(Request $request,TrickRepository $tricksRepo, EntityManagerInterface $manager, $id): Response
     {
         $trick = $tricksRepo->findOneById($id);
         $comment = new Comment();
