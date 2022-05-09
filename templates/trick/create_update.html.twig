@@ -80,9 +80,9 @@ SnowTricks - Créer un trick
         <br/>
         <br/>
     </div>
-{% elseif app.request.attributes.get('_route')=='trick_edit_images' %}
+{% elseif app.request.attributes.get('_route')=='trick_add_images' %}
     <div class="col-lg-7 col-md-10 mx-auto">
-        <h1>Modifier les images</h1>
+        <h1>Ajouter des images</h1>
         {{ form_start(form) }}
         {{ include('trick/form_items/images_form.html.twig',{form: form}) }}
         <button type="submit" class="btn btn-primary btn-lg col-3"><i class="fas fa-check"></i> Enregistrer les images </button>
@@ -91,12 +91,40 @@ SnowTricks - Créer un trick
         <br/>
         <br/>
     </div>
-{% elseif app.request.attributes.get('_route')=='trick_edit_videos' %}
+{% elseif app.request.attributes.get('_route')=='trick_edit_image' %}
     <div class="col-lg-7 col-md-10 mx-auto">
-        <h1>Modifier les vidéos</h1>
+        <h1>Modifier l'image</h1>
+        {% for image in trick.images %}
+            <div class="col-lg-2 col-md-3 mb-3 pb-3">
+                <img class="card-img-top" src="{{ asset('/uploads/tricks/' ~ image.path) }}" alt="..."/>
+                <a type="button" href="{{ path('image_delete',{id:image.id}) }}">Supprimer l'image</a>
+            </div>
+        {% endfor %}
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-primary btn-lg col-3"><i class="fas fa-check"></i> Enregistrer les images </button>
+        {{ form_end(form, {render_rest: false }) }}
+        <br/>
+        <br/>
+        <br/>
+    </div>
+{% elseif app.request.attributes.get('_route')=='trick_add_videos' %}
+    <div class="col-lg-7 col-md-10 mx-auto">
+        <h1>Ajouter des vidéos</h1>
         {{ form_start(form) }}
         {{ include('trick/form_items/videos_form.html.twig',{form: form}) }}
         <button type="submit" class="btn btn-primary btn-lg col-3"><i class="fas fa-check"></i> Enregistrer les vidéos </button>
+        {{ form_end(form, {render_rest: false }) }}
+        <br/>
+        <br/>
+        <br/>
+    </div>
+{% elseif app.request.attributes.get('_route')=='trick_edit_video' %}
+    <div class="col-lg-7 col-md-10 mx-auto">
+        <h1>Modifier la vidéo</h1>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-primary btn-lg col-3"><i class="fas fa-check"></i> Enregistrer la vidéo </button>
         {{ form_end(form, {render_rest: false }) }}
         <br/>
         <br/>

@@ -5,10 +5,13 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Entity\Image;
 use App\Entity\Trick;
+use App\Entity\Video;
 use App\Form\CommentType;
 use App\Form\TrickType;
-use App\Repository\CommentRepository;
+use App\Form\VideoType;
+use App\Repository\ImageRepository;
 use App\Repository\TrickRepository;
+use App\Repository\VideoRepository;
 use App\Services\UploadImage;
 use ContainerMsjMSmk\getUserInterfaceService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,7 +34,7 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            $trick->setUser($this->getUser());
             $trick = $form->getData();
 
             $trick->setCategory($form->get('category')->getData());
@@ -105,7 +108,7 @@ class TrickController extends AbstractController
     }
 
     #[Route('/trick/{id}', name: 'trick_details')]
-    public function show(Request $request,TrickRepository $tricksRepo, EntityManagerInterface $manager, $id, CommentRepository $commentsRepo ): Response
+    public function show(Request $request,TrickRepository $tricksRepo, EntityManagerInterface $manager, $id): Response
     {
         $trick = $tricksRepo->findOneById($id);
         $comment = new Comment();
@@ -234,11 +237,11 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('user/trick/edit/images/{id}', name: 'trick_edit_images')]
+    #[Route('user/trick/add/images/{id}', name: 'trick_add_images')]
     public function editImages($id, TrickRepository $trickRepository, EntityManagerInterface $manager, Request $request, UploadImage $uploadImage)
     {
         $trick = $trickRepository->find($id);
-        $form = $this->createForm(TrickType::class, $trick);
+        $form = $this->createForm(TrickType::class);
         $form->remove('name');
         $form->remove('description');
         $form->remove('category');
@@ -269,11 +272,45 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('user/trick/edit/videos/{id}', name: 'trick_edit_videos')]
-    public function editVid($id, TrickRepository $trickRepository, EntityManagerInterface $manager, Request $request)
+    #[Route('user/trick/edit/image/{id}', name: 'trick_edit_image')]
+    public function editImage($id, TrickRepository $trickRepository, EntityManagerInterface $manager, Request $request, UploadImage $uploadImage)
     {
         $trick = $trickRepository->find($id);
         $form = $this->createForm(TrickType::class, $trick);
+        $form->remove('name');
+        $form->remove('description');
+        $form->remove('category');
+        $form->remove('mainImage');
+        $form->remove('videos');
+
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $image = $form->get('images')->getData();
+                $resultImage = $uploadImage->imageRegister($image);
+                $image = new Image();
+                $image->setPath($resultImage)
+                    ->setTrick($trick);
+                $trick->addImage($image);
+
+
+            $manager->flush();
+            $referer = $request->headers->get('referer');
+            return $this->redirect($referer);
+        }
+        return $this->render('trick/create_update.html.twig', [
+            'trick' => $trick,
+            'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('user/trick/add/videos/{id}', name: 'trick_add_videos')]
+    public function editVids($id, TrickRepository $trickRepository, EntityManagerInterface $manager, Request $request)
+    {
+        $trick = $trickRepository->find($id);
+        $form = $this->createForm(TrickType::class);
         $form->remove('name');
         $form->remove('description');
         $form->remove('category');
@@ -297,20 +334,54 @@ class TrickController extends AbstractController
         ]);
     }
 
+    #[Route('user/trick/edit/video/{id}', name: 'trick_edit_video')]
+    public function editVid($id, VideoRepository $videoRepository, EntityManagerInterface $manager, Request $request)
+    {
+
+        $video = $videoRepository->find($id);
+        $form = $this->createForm(VideoType::class, $video);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $url = $form->get('url')->getData();
+            $video->setUrl($url);
+
+
+            $manager->persist($video);
+            $manager->flush();
+            $referer = $request->headers->get('referer');
+            return $this->redirect($referer);
+        }
+        return $this->render('trick/create_update.html.twig', [
+            'trick' => $video,
+            'form' => $form->createView()
+        ]);
+    }
+
+
+    #[Route('user/trick/delete/videos/{id}', name: 'video_delete')]
+    public function deleteVideo( Video $video, EntityManagerInterface $manager, Request $request): response
+    {
+        $manager->remove($video);
+        $manager->flush();
+        $referer = $request->headers->get('referer');
+        return $this->redirect($referer);
+
+    }
+
     #[Route('user/trick/delete/image/{id}', name: 'image_delete')]
-    public function deleteImage(Image $image, Request $request, EntityManagerInterface $em, KernelInterface $kernel, TrickRepository $tricksRepo): response
+    public function deleteImage(Image $image, EntityManagerInterface $manager, Request $request, KernelInterface $kernel): response
     {
         $nom = $image->getPath();
         $imagesDir = $kernel->getProjectDir() . '/public/uploads/tricks/';
         $idTrick = $image->getTrick()->getId();
 
-
         unlink($imagesDir . $nom);
 
-        $em->remove($image);
-        $em->flush();
+        $manager->remove($image);
+        $manager->flush();
 
-        return $this->redirectToRoute('trick_edit_images', ['id' => $idTrick]);
+        $referer = $request->headers->get('referer');
+        return $this->redirect($referer);
 
     }
 

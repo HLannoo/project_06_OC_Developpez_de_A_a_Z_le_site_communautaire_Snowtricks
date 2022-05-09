@@ -8,131 +8,155 @@
     <header class="masthead">
         <div class="container">
             <div class="d-flex flex-row-reverse">
-                {%  if app.user and app.user.isVerified == true %}
-                <a href="{{ path("trick_delete",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2 fs-2 mb-3 " onclick="return confirm('Attention ! Ceci va supprimer le trick')">
-                    <i class="bi bi-trash"></i>
-                </a>
-                <a href="{{ path("trick_edit",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2 fs-2 mb-3">
+                {% if app.user and app.user.isVerified == true %}
+                    <a href="{{ path("trick_delete",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2 fs-2 mb-3 "
+                       onclick="return confirm('Attention ! Ceci va supprimer le trick')">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                    <a href="{{ path("trick_edit",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2 fs-2 mb-3">
 
-                    <i class="bi bi-pencil-square"></i>
-                </a>
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
                 {% endif %}
             </div>
 
-        <style>
-            .masthead
-            {
-                background-image: url({{ asset('/uploads/tricks/' ~ trick.mainImage )}})
-
-            ;}
-        </style>
-            {%  if app.user and app.user.isVerified == true %}
-            <a href="{{ path("trick_edit_main",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2">
-                <i class="bi bi-pencil-square"></i>
-            </a>
+            <style>
+                .masthead {
+                    background-image: url({{ asset('/uploads/tricks/' ~ trick.mainImage )}});
+                }
+            </style>
+            {% if app.user and app.user.isVerified == true %}
+                <a href="{{ path("trick_edit_main",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2">
+                    <i class="bi bi-pencil-square"></i>
+                </a>
             {% endif %}
 
-        <div class="container h-100">
-            <div class="row h-100 align-items-center">
-                <div class="col-12 text-center">
-                    <h1 class="fw-light">{{ trick.name }}
-                        {%  if app.user and app.user.isVerified == true %}
-                        <a href="{{ path("trick_edit_name",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2">
-                            <i class="bi bi-pencil-square"></i>
-                        </a>
-                        {% endif %}
-                    </h1>
+            <div class="container h-100">
+                <div class="row h-100 align-items-center">
+                    <div class="col-12 text-center">
+                        <h1 class="fw-light">{{ trick.name }}
+                            {% if app.user and app.user.isVerified == true %}
+                                <a href="{{ path("trick_edit_name",{'id': trick.id}) }}"
+                                   class="btn btn-sm btn-primary p-2">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            {% endif %}
+                        </h1>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     </header>
 {% endblock %}
 {% block body %}
-    <div class="container-fluid ">
-        <div class="row d-flex">
-            <div class="row col-6 ">
-                <h2
-                        class="text-center">Les tricks en image
-                    {%  if app.user and app.user.isVerified == true %}
-                    <a href="{{ path("trick_edit_images",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2">
-                        <i class="bi bi-pencil-square"></i>
-                    </a>
-                    {% endif %}
-
-                </h2>
-
+    <div class="container-fluid p-3 ">
+        <div class="row">
+            <div class="d-flex justify-content-start flex-wrap col-lg-6">
                 {% for image in trick.images %}
-                    <div class="col-lg-4 col-md-12 mb-3 pb-3 ">
-                        <div class="card h-100 ">
-                            <img class="card-img-top" src="{{ asset('/uploads/tricks/' ~ image.path) }}" alt="..."/>
+                    <div class="col-lg-4 col-md-12 ">
+                        <div class="card bg-primary h-100">
+                            <img class="card-img-top h-100" src="{{ asset('/uploads/tricks/' ~ image.path) }}"
+                                 alt="..."/>
+                            {% if app.user and app.user.isVerified == true %}
+                                <div class="row">
+                                    <div class="d-flex justify-content-between">
+                                        <a href="{{ path("trick_add_images",{'id': trick.id}) }}"
+                                           class="btn btn-sm btn-primary p-2">
+                                            <i class="bi bi-plus-square-fill"></i>
+                                        </a>
+                                        <a type="button" class="btn btn-sm btn-primary"
+                                           href="{{ path("trick_edit_image",{'id': trick.id}) }}">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a type="button" class="btn btn-sm btn-primary"
+                                           onclick="return confirm('Attention ! Ceci va supprimer l\'image')"
+                                           href="{{ path('image_delete',{id:image.id}) }}">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}
+
             </div>
-            <div class="row d-flex align-items-end col-6">
-                <h2
-                        class="text-center">Les tricks en vidéo
-                    {%  if app.user and app.user.isVerified == true %}
-                    <a href="{{ path("trick_edit_videos",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2">
-                        <i class="bi bi-pencil-square"></i>
-                    </a>
-                    {% endif %}
-                </h2>
+            <div class="d-flex justify-content-start flex-wrap col-lg-6">
                 {% for video in trick.videos %}
-                    <div class="col-lg-4 col-md-12 mb-3 pb-3">
-                        <div class="card h-100">
+                    <div class="col-lg-4 col-md-12">
+                        <div class="card h-100 bg-primary">
                             <iframe
+                                    class="h-100"
                                     src="{{ video.url }}"
                                     title="YouTube video player"
                                     frameborder="0"
                                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowfullscreen>
-
                             </iframe>
+                            {% if app.user and app.user.isVerified == true %}
+                            <div class="row">
+                                <div class="d-flex justify-content-between">
+
+                                    <a href="{{ path("trick_add_videos",{'id': trick.id}) }}"
+                                       class="btn btn-sm btn-primary p-2">
+                                        <i class="bi bi-plus-square-fill"></i>
+                                    </a>
+                                    <a type="button" class="btn btn-sm btn-primary"
+                                       href="{{ path("trick_edit_video",{'id': video.id}) }}">
+                                        <i class="bi bi-pencil-square"></i>
+                                        <a type="button" class="btn btn-sm btn-primary"
+                                           onclick="return confirm('Attention ! Ceci va supprimer la vidéo')"
+                                           href="{{ path('video_delete',{id:video.id}) }}">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </a>
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}
             </div>
         </div>
     </div>
-{# Contenu du trick #}
-<section id="content">
-    <div class="container">
-        <p>
-            {{ trick.description}}
-            {%  if app.user and app.user.isVerified == true %}
-            <a href="{{ path("trick_edit_description",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2">
-                <i class="bi bi-pencil-square"></i>
-            </a>
-            {% endif %}
+    {# Contenu du trick #}
+    <section id="content">
+        <div class="container p-5">
+            <h2 class="text-center">Description du trick </h2>
+            <p>
+                {{ trick.description }}
+                {% if app.user and app.user.isVerified == true %}
+                    <a href="{{ path("trick_edit_description",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                {% endif %}
 
-        </p>
-    </div>
-</section>
+            </p>
+        </div>
+    </section>
 
     {# Informations du trick #}
     <section id="informations">
         <div class="container">
-            <p>
-                {{ trick.createdAt|date('d-m-Y') }}
-            </p>
-            <p>
-                {{ trick.category.name}}
-                {%  if app.user and app.user.isVerified == true %}
-                <a href="{{ path("trick_edit_category",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2">
-                    <i class="bi bi-pencil-square"></i>
-                </a>
-                {% endif %}
-            </p>
+            <div class="row">
+                <p>Créé le : {{ trick.createdAt|date('d-m-Y') }} à {{ trick.createdAt|date('H:i:s') }}</p>
+                <p> Catégorie : {{ trick.category.name }}
+                    {% if app.user and app.user.isVerified == true %}
+                        <a href="{{ path("trick_edit_category",{'id': trick.id}) }}" class="btn btn-sm btn-primary p-2">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    {% endif %}
+                </p>
+                <p> Créateur : {{ trick.user.pseudo }}</p>
+            </div>
             <br/>
             <HR>
             <section id="comment">
                 {% if app.user %}
-            {{ form_start(commentForm) }}
-                {{ form_row(commentForm.content) }}
-            <button type="submit" class="'btn btn-primary">Poster le commentaire </button>
-            {{ form_end(commentForm) }}
+                    {{ form_start(commentForm) }}
+                    {{ form_row(commentForm.content) }}
+                    <button type="submit" class="'btn btn-primary">Poster le commentaire</button>
+                    {{ form_end(commentForm) }}
                 {% else %}
                     <div class="col-sm-10 col-md-8 mx-auto">
                         <h3>Veuillez vous connecter pour laisser un commentaire</h3>
@@ -147,18 +171,19 @@
     {# Espace commentaires #}
     <section id="comments">
         {% for comment in trick.comments %}
-        <div class="container">
+            <div class="container">
                 <div class="col-2">
-                    <img src="{{ asset('/uploads/profil/' ~ trick.user.image) }}" class="align-self-start rounded-circle mr-3 w-25">
+                    <img src="{{ asset('/uploads/profil/' ~ trick.user.image) }}"
+                         class="align-self-start rounded-circle mr-3 w-25">
                 </div>
                 <div class="col-10">
                     (<small>{{ comment.createdAt|date('d-m-Y à H:i') }}</small>) - par : {{ trick.user.pseudo }}
                     <div class="align-self-end">
-                    {{ comment.content | raw }}
+                        {{ comment.content | raw }}
                     </div>
                 </div>
             </div>
-            {% endfor %}
+        {% endfor %}
     </section>
     <br/>
     <br/>
