@@ -1,7 +1,5 @@
 {{ form_widget(form._token) }}
     <div class="form-group">
-        <button type="button" class="btn btn-primary btn-new" data-collection='#videos'>Ajouter video</button>
-
         <div
                 id="videos"
                 class="row"
@@ -9,10 +7,18 @@
                 data-index="{{ form.videos|length >0 ? form.videos|last.vars.name +1 : 0 }}">
             <br/>
 
-            {% for video in form.videos %}
-                {{ form_row(video.url ) }}
+                {% for video in form.videos %}
+                    {{ form_row(video.url) }}
             {% endfor %}
+
+
+
         </div>
+        <br/>
+            <button type="button" class="btn btn-primary btn-new" data-collection='#videos'>Ajouter video</button>
+        <br/>
+        <br/>
+
 
         {% block javascripts %}
             <script>
