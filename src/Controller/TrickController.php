@@ -9,7 +9,6 @@ use App\Entity\Video;
 use App\Form\CommentType;
 use App\Form\TrickType;
 use App\Form\VideoType;
-use App\Repository\ImageRepository;
 use App\Repository\TrickRepository;
 use App\Repository\VideoRepository;
 use App\Services\UploadImage;
