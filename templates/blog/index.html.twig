@@ -36,15 +36,15 @@
                             <div class="d-flex align-items-end justify-content-between">
                                 <div class="d-flex align-items-center">
                                     <div class="small">
-                                        <a href="{{ path('trick_details',{'id': trick.id }) }}" class="btn btn-primary">
+                                        <a href="{{ path('trick_details',{'slug': trick.slug }) }}" class="btn btn-primary">
                                             <div class="card-title mb-1">{{ trick.name }}</div></a>
                                         <div class="fw-bold"></div>
                                         <div class="text-muted">{{ trick.createdAt | date('d/m/Y') }}</div>
                                         {%  if app.user and app.user.isVerified == true %}
-                                        <a href="{{ path("trick_edit",{'id': trick.id}) }}" class="btn btn-sm btn-primary">
+                                        <a href="{{ path("trick_edit",{'slug': trick.slug}) }}" class="btn btn-sm btn-primary">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                            <a href="{{ path("trick_delete",{'id': trick.id}) }}" class="btn btn-sm btn-primary" onclick="return confirm('Attention ! Ceci va supprimer le trick')">
+                                            <a href="{{ path("trick_delete",{'slug': trick.slug}) }}" class="btn btn-sm btn-primary" onclick="return confirm('Attention ! Ceci va supprimer le trick')">
                                                 <i class="bi bi-trash"></i>
                                             </a>
                                         {% endif %}
