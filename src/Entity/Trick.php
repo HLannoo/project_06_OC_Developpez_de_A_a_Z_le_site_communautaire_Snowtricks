@@ -18,7 +18,7 @@ class Trick
     #[ORM\Column(type: 'string', length: 85, nullable: true, unique: true)]
     private $name;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: 'string', length: 2048, nullable: true)]
 
     private $description;
 

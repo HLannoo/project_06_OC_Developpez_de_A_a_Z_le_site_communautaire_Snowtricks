@@ -3,6 +3,7 @@
 <head>
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Welcome!{% endblock %}</title>
     <link rel="icon"
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
@@ -17,10 +18,12 @@
     {% block navbar %}
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm ">
             <div class="container"><a href="{{ path('app_blog')}}" class="navbar-brand"> <b>SnowTricks</b></a>
-                <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
-                        class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
-                <div id="navbarSupportedContent" class="collapse navbar-collapse d-flex flex-row-reverse">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div id="navbarSupportedContent" class="collapse navbar-collapse flex-row-reverse">
+
                     <ul class="navbar-nav">
                         {%  if app.user and app.user.isVerified == true %}
                             <li class="nav-item"><a href="{{ path('trick_create')}}" class="nav-link">Créer un Tricks</a></li>

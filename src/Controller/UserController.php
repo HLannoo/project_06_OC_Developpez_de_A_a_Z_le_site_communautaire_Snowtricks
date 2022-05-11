@@ -31,8 +31,11 @@ class UserController extends AbstractController
 
                 $nom = $user->getImage();
                 $imagesDir = $kernel->getProjectDir() . '/public/uploads/profil/';
-                unlink($imagesDir . $nom);
 
+                if (is_file($imagesDir . $nom)) {
+
+                    unlink($imagesDir . $nom);
+                }
                 $resultImage = $uploadImage->profilImageRegister($mainImage);
                 $user->setImage($resultImage);
             }

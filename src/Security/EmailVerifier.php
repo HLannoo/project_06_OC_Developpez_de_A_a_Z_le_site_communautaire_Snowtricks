@@ -34,10 +34,17 @@ class EmailVerifier extends AbstractController
             $user->getEmail()
         );
 
+        $token = md5(uniqid(). $user->getId());
+
         $context = $email->getContext();
         $context['signedUrl'] = $signatureComponents->getSignedUrl();
         $context['expiresAtMessageKey'] = $signatureComponents->getExpirationMessageKey();
         $context['expiresAtMessageData'] = $signatureComponents->getExpirationMessageData();
+        $url = $context['signedUrl'] = $signatureComponents->getSignedUrl();
+        $components = parse_url($url);
+        parse_str($components['query'], $results);
+        $this->updateToken($results['token'], $user);
+
 
         $email->context($context);
 
@@ -55,5 +62,9 @@ class EmailVerifier extends AbstractController
         $this->entityManager->flush();
     }
 
-
+    private function updateToken($token, User $user){
+        $user->setToken($token);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+    }
 }

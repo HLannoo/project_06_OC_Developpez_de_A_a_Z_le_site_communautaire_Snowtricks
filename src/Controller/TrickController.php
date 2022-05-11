@@ -9,10 +9,10 @@ use App\Entity\Video;
 use App\Form\CommentType;
 use App\Form\TrickType;
 use App\Form\VideoType;
+use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
 use App\Repository\VideoRepository;
 use App\Services\UploadImage;
-use ContainerMsjMSmk\getUserInterfaceService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Twig\Environment;
 
 
 class TrickController extends AbstractController
@@ -113,9 +114,11 @@ class TrickController extends AbstractController
     }
 
     #[Route('/trick/{slug}', name: 'trick_details')]
-    public function show(Request $request,TrickRepository $tricksRepo, EntityManagerInterface $manager, $slug): Response
+    public function show(Request $request,TrickRepository $trickRepository,Environment $twig, EntityManagerInterface $manager, Trick $tricks,CommentRepository $commentRepository, $slug): Response
     {
-        $trick = $tricksRepo->findOneBy(['slug'=>$slug]);
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $commentRepository->getCommentPaginator($tricks, $offset);
+        $trick = $trickRepository->findOneBy(['slug'=>$slug]);
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
 
@@ -133,10 +136,14 @@ class TrickController extends AbstractController
                 'success',
                 'Votre commentaire a bien été enregistré !'
             );
+            return $this->redirectToRoute('trick_details', ['slug' => $slug]);
         }
 
         return $this->render('trick/details.html.twig', [
             'trick' => $trick,
+            'comments' => $paginator,
+            'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + CommentRepository::PAGINATOR_PER_PAGE),
             'commentForm'=>$form->createView()
         ]);
 
