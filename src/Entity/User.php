@@ -24,6 +24,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Email]
     private $email;
 
+    #[ORM\Column(type: 'string', length: 255,nullable: true )]
+    private $token;
+
     #[ORM\Column(type: 'json')]
     private $roles = [];
 
@@ -147,11 +150,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getToken(): ?string
-    {
-        return $this->token;
-    }
-
     public function isVerified(): bool
     {
         return $this->isVerified;
@@ -220,6 +218,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $trick->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): self
+    {
+        $this->token = $token;
 
         return $this;
     }

@@ -39,7 +39,7 @@
                                         <a href="{{ path('trick_details',{'slug': trick.slug }) }}" class="btn btn-primary">
                                             <div class="card-title mb-1">{{ trick.name }}</div></a>
                                         <div class="fw-bold"></div>
-                                        <div class="text-muted">{{ trick.createdAt | date('d/m/Y') }}</div>
+                                        <div class="text-muted">{{ trick.createdAt | date('d/m/Y',"Europe/Paris") }}</div>
                                         {%  if app.user and app.user.isVerified == true %}
                                         <a href="{{ path("trick_edit",{'slug': trick.slug}) }}" class="btn btn-sm btn-primary">
                                             <i class="bi bi-pencil-square"></i>
