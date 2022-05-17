@@ -24,6 +24,7 @@
     </header>
     <section class="tricks">
         <div class="container pt-5">
+            {% if comments|length > 0 %}
             <div class="row d-flex justify-content-center" >
                 {% for trick in tricks %}
                 <div class="col-lg-2 col-md-12 mb-3 pb-3">

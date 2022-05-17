@@ -114,9 +114,9 @@ class TrickController extends AbstractController
     }
 
     #[Route('/trick/{slug}', name: 'trick_details')]
-    public function show(Request $request,TrickRepository $trickRepository,Environment $twig, EntityManagerInterface $manager, Trick $tricks,CommentRepository $commentRepository, $slug): Response
+    public function show(Request $request,TrickRepository $trickRepository, EntityManagerInterface $manager, Trick $tricks,CommentRepository $commentRepository, $slug): Response
     {
-        $offset = max(0, $request->query->getInt('offset', 0));
+        $offset = max(0, $request->query->getInt('offset', 10));
         $paginator = $commentRepository->getCommentPaginator($tricks, $offset);
         $trick = $trickRepository->findOneBy(['slug'=>$slug]);
         $comment = new Comment();
