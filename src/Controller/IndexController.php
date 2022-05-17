@@ -13,15 +13,12 @@ class IndexController extends AbstractController
 {
 
     #[Route('/', name: 'app_blog')]
-    public function index(TrickRepository $tricksRepo, Request $request, Trick $tricks, TrickRepository $trickRepository ): Response
+    public function index(TrickRepository $tricksRepo, Request $request): Response
     {
-        $offset = max(0, $request->query->getInt('offset', 10));
-        $paginator = $trickRepository->getTrickPaginator($tricks, $offset);
-        $tricks = $tricksRepo->findAll();
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $tricksRepo->getTrickPaginator($offset);
         return $this->render('blog/index.html.twig', [
-            'controller_name' => 'IndexController',
-            'tricks'=>$tricks,
-            'paginations' => $paginator,
+            'tricks'=>$paginator,
             'previous' => $offset - TrickRepository::PAGINATOR_PER_PAGE,
             'next' => min(count($paginator), $offset + TrickRepository::PAGINATOR_PER_PAGE)
         ]);

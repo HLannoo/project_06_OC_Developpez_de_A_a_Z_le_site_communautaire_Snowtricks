@@ -24,11 +24,9 @@ class TrickRepository extends ServiceEntityRepository
         parent::__construct($registry, Trick::class);
     }
 
-    public function getTrickPaginator(Trick $trick, int $offset): Paginator
+    public function getTrickPaginator(int $offset): Paginator
     {
         $query = $this->createQueryBuilder('c')
-            ->andWhere('c.trick = :trick')
-            ->setParameter('trick', $trick)
             ->orderBy('c.createdAt', 'DESC')
             ->setMaxResults(self::PAGINATOR_PER_PAGE)
             ->setFirstResult($offset)
