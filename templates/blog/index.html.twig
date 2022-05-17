@@ -22,8 +22,9 @@
             </div>
         </section>
     </header>
-    <section class="tricks">
+    <section id="tricks">
         <div class="container pt-5">
+            {% if tricks|length > 0 %}
             <div class="row d-flex justify-content-center" >
                 {% for trick in tricks %}
                 <div class="col-lg-2 col-md-12 mb-3 pb-3">
@@ -56,6 +57,16 @@
                 </div>
                 {% endfor %}
             </div>
+                {% if previous >= 0 %}
+                    <a class="text-align-center btn btn-primary" href="{{ path('app_blog', {offset: previous }) }}}#tricks">Précédent</a>
+                {% endif %}
+                {% if next < tricks|length %}
+                    <a class="text-align-center btn btn-primary" href="{{ path('app_blog', {offset: next }) }}}#tricks">Suivant</a>
+                {% endif %}
+            {% else %}
+                <div class="text-align-center">Pas d'articles disponibles.</div>
+            {% endif %}
         </div>
+        <br/>
     </section>
 {% endblock %}

@@ -179,10 +179,10 @@
     </section>
     {# Espace commentaires #}
     <section id="comments">
-
+<div class="container">
         {% if comments|length > 0 %}
-        {{ comments|length }}
-        {% for comment in trick.comments  %}
+        <p>Commentaires : ({{ comments|length }})</p>
+        {% for comment in comments  %}
             <div class="container">
                 <div class="col-2">
                     <img src="{{ asset('/uploads/profil/' ~ comment.user.image)|default ('/uploads/profil/defaults' ~ comment.user.image) }}"
@@ -195,16 +195,18 @@
                     </div>
                 </div>
             </div>
+            <br/>
         {% endfor %}
             {% if previous >= 0 %}
-                <a href="{{ path('trick_details', { slug: trick.slug, offset: previous }) }}">Précédent</a>
+                <a class="text-align-center btn btn-primary" href="{{ path('trick_details', { slug: trick.slug, offset: previous }) }}}#comments">Précédent</a>
                 {% endif %}
             {% if next < comments|length %}
-            <a href="{{ path('trick_details', { slug: trick.slug, offset: next }) }}">Suivant</a>
+            <a class="text-align-center btn btn-primary" href="{{ path('trick_details', { slug: trick.slug, offset: next }) }}}#comments">Suivant</a>
             {% endif %}
         {% else %}
-            <div>No comments have been posted yet for this conference.</div>
+            <div class="text-align-center">Pas de commentaires postés.</div>
         {% endif %}
+</div>
     </section>
     <br/>
     <br/>
