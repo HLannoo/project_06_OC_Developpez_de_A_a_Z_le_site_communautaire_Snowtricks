@@ -27,16 +27,9 @@ class TrickType extends AbstractType
                     'choice_label' =>'name',
                     'mapped'=>false,
                 ])
-            ->add('mainImage', FileType::class, [
-                'label' => 'Image Principale (Taille maximum supportée : '.ini_get('post_max_size').')',
-                'mapped' => false,
-                'required' => false,
-                'attr'     => [
-                    'accept' => 'image/*'
-                ]])
 
             ->add('images', FileType::class, [
-                'label' => 'Images secondaires (Taille maximum supportée : '.ini_get('post_max_size').')',
+                'label' => 'Images (La première image sera la principale - Taille max.: '.ini_get('post_max_size').')',
                 'mapped' => false,
                 'required' => false,
                 'multiple'=>true,

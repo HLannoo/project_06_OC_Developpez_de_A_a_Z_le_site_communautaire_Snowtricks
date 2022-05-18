@@ -47,9 +47,6 @@ class Trick
     #[ORM\OneToMany(mappedBy: 'trick', targetEntity: Comment::class)]
     private $comments;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $mainImage;
-
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tricks')]
     #[ORM\JoinColumn(nullable: true)]
     private $user;
@@ -233,18 +230,6 @@ class Trick
                 $comment->setTrick(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getMainImage(): ?string
-    {
-        return $this->mainImage;
-    }
-
-    public function setMainImage(?string $mainImage): self
-    {
-        $this->mainImage = $mainImage;
 
         return $this;
     }

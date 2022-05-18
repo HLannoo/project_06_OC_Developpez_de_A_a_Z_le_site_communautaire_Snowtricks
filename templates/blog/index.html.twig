@@ -29,7 +29,9 @@
                 {% for trick in tricks %}
                 <div class="col-lg-2 col-md-12 mb-3 pb-3">
                     <div class="card h-100 shadow border-0">
-                        <img class="card-img-top" src="{{ asset('/uploads/tricks/' ~ trick.mainImage)}}" alt="..." />
+                        {% for image in trick.images|slice (0,1) %}
+                        <img class="card-img-top" src="{{ asset('/uploads/tricks/' ~ image.path)}}" alt="..." />
+                        {%  endfor %}
                         <div class="card-body p-2 ">
                             <div class="badge bg-primary bg-gradient rounded-pill mb-2"></div>
                         </div>
