@@ -151,7 +151,6 @@ class TrickController extends AbstractController
         $form->remove('description');
         $form->remove('category');
         $form->remove('images');
-        $form->remove('mainImage');
         $form->remove('videos');
 
         $form->handleRequest($request);
@@ -182,7 +181,6 @@ class TrickController extends AbstractController
         $form->remove('category');
         $form->remove('name');
         $form->remove('images');
-        $form->remove('mainImage');
         $form->remove('videos');
 
         $form->handleRequest($request);
@@ -206,7 +204,6 @@ class TrickController extends AbstractController
         $form->remove('name');
         $form->remove('description');
         $form->remove('images');
-        $form->remove('mainImage');
         $form->remove('videos');
 
         $form->handleRequest($request);
@@ -298,7 +295,6 @@ class TrickController extends AbstractController
         $form->remove('name');
         $form->remove('description');
         $form->remove('category');
-        $form->remove('mainImage');
         $form->remove('images');
 
         $form->handleRequest($request);
@@ -369,30 +365,12 @@ class TrickController extends AbstractController
 
     }
 
-    #[Route('user/trick/delete/mainimage', name: 'main_image_delete')]
-    public function deleteMainImage( Trick $trick, Request $request, EntityManagerInterface $em, KernelInterface $kernel, TrickRepository $tricksRepo): response
-    {
-        $nom = $trick->getMainImage();
-        $imagesDir = $kernel->getProjectDir() . '/public/uploads/tricks/';
-
-        unlink($imagesDir . $nom);
-
-        $em->remove($trick);
-        $em->flush();
-        $route = $request->headers->get('referer');
-
-        return $this->redirectToRoute($route);
-
-    }
-
     #[Route('user/trick/delete/{slug}', name: 'trick_delete')]
     public function deleteTrick( EntityManagerInterface $manager, TrickRepository $trickRepository, KernelInterface $kernel, $slug): response
     {
         $trick = $trickRepository->findOneBy(['slug'=>$slug]);
         $imagesDir = $kernel->getProjectDir() . '/public/uploads/tricks/';
 
-        $mainImage = $trick->getMainImage();
-        unlink($imagesDir . $mainImage);
 
         foreach ($trick->getImages() as $image)
         {
