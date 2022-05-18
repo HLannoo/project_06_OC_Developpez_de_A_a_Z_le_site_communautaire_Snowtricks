@@ -6,15 +6,6 @@
 
             {{ form_row(form.category) }}
 
-{% if app.request.attributes.get('_route')=='trick_edit' %}
-    <div class="col-lg-2 col-md-3 mb-3 pb-3">
-        <img class="card-img-top" src="{{ asset('/uploads/tricks/' ~ trick.mainImage) }}" alt="..."/>
-        <a type="button" href="">Supprimer l'image</a>
-    </div>
-{% endif %}
-
-            {{ form_row(form.mainImage) }}
-
            {% if app.request.attributes.get('_route')=='trick_edit' %}
                {% for image in trick.images %}
                    <div class="col-lg-2 col-md-3 mb-3 pb-3">

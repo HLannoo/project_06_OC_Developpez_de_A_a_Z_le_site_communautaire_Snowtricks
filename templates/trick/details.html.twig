@@ -24,14 +24,16 @@
 
             <style>
                 .masthead {
-                    background-image: url({{ asset('/uploads/tricks/' ~ trick.mainImage )}});
+                {% for image in trick.images|slice (0,1) %}
+                    background-image: url({{ asset('/uploads/tricks/' ~ image.path )}});
                 }
             </style>
             {% if app.user and app.user.isVerified == true %}
-                <a href="{{ path("trick_edit_main",{'slug': trick.slug}) }}" class="btn btn-sm btn-primary p-2">
+                <a href="{{ path("trick_edit_image",{'id': image.id}) }}" class="btn btn-sm btn-primary p-2">
                     <i class="bi bi-pencil-square"></i>
                 </a>
             {% endif %}
+            {% endfor %}
 
             <div class="container h-100">
                 <div class="row h-100 align-items-center">
@@ -60,7 +62,7 @@
         <div id="voirplus" class="container-fluid p-3 d-lg-block collapse">
             <div class="row">
                 <div class="d-flex justify-content-start flex-wrap col-lg-6">
-                    {% for image in trick.images %}
+                    {% for image in trick.images|slice (1,999) %}
                         <div class="col-lg-4 col-md-12">
                             <div class="card h-100 bg-primary ">
                                 <img class="card-img-top h-100" src="{{ asset('/uploads/tricks/' ~ image.path) }}"
@@ -73,7 +75,7 @@
                                                 <i class="bi bi-plus-square-fill"></i>
                                             </a>
                                             <a type="button" class="btn btn-sm card-link btn-primary"
-                                               href="{{ path("trick_edit_image",{'slug': trick.slug}) }}">
+                                               href="{{ path("trick_edit_image",{'id': image.id}) }}">
                                                 <i class="bi bi-pencil-square"></i>
                                             </a>
                                             <a type="button" class="btn btn-sm card-link btn-primary"
