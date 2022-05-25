@@ -7,11 +7,11 @@
 {% block body %}
     <div class="container-xl px-4 mt-4">
         <nav class="nav nav-borders">
-            <a class="nav-link active ms-0" href="{{ path('user_profile',{'id': app.user.id})}}" >Mon profil</a>
-            <a class="nav-link" href="{{ path('app_forgot_password_request')}}">Sécurité</a>
+            <a class="nav-link active ms-0" href="{{ path('user_profile',{'id': app.user.id}) }}">Mon profil</a>
+            <a class="nav-link" href="{{ path('app_forgot_password_request') }}">Sécurité</a>
         </nav>
         <hr class="mt-0 mb-4">
-        {% for label, messages in app.flashes (['error','success'])%}
+        {% for label, messages in app.flashes (['error','success']) %}
             {% for message in messages %}
                 <div class="alert alert-success alert-dismissible" role="alert">
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -26,32 +26,41 @@
         <div class="row">
 
             <div class="col-xl-4">
-                <!-- Profile picture card-->
                 <div class="card mb-4 mb-xl-0">
                     <div class="card-header">Image de profil</div>
                     <div class="card-body text-center">
+                        {% if app.user.id == user.id %}
                         {{ form_start(FormProfile) }}
-                        <!-- Profile picture image-->
-                        <img class="img-account-profile card-img w-75  rounded-circle mb-2" src="{{ asset('/uploads/profil/' ~ user.image)|default('/uploads/profil/defaults' ~ user.image) }}" alt="">
+                        {% endif %}
+                        {% if user.image == true %}
+                            <img class="img-account-profile card-img w-75  rounded-circle mb-2"
+                                 src="{{ asset('/uploads/profil/' ~ user.image) }}" alt="">
+                        {% elseif user.image == false %}
+                            <img class="img-account-profile card-img w-75  rounded-circle mb-2"
+                                 src="{{ asset('/uploads/profil/defaults/default.jpg') }}" alt="">
+                        {% endif %}
+                        {% if app.user.id == user.id %}
                         <button class="btn btn-primary" type="button">{{ form_row(FormProfile.mainImage) }}</button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
             <div class="col-xl-8">
-
                 <div class="card mb-4">
                     <div class="card-header">Détails du compte</div>
                     <div class="card-body">
-
-                                {{ form_row(FormProfile.pseudo) }}
-
-                                {{ form_row(FormProfile.email) }}
-                                <button type="submit" class="'btn btn-primary rounded">Enregistrer les changements</button>
-
-                                {{ form_end(FormProfile) }}
+                        {% if app.user.id == user.id %}
+                        {{ form_row(FormProfile.pseudo) }}
+                        {{ form_row(FormProfile.email) }}
+                        <button type="submit" class="'btn btn-primary rounded">Enregistrer les changements</button>
+                        {{ form_end(FormProfile) }}
+                            {% else%}
+                                <p>Page de : {{ user.pseudo }}</p>
+                                <p>Email de contact : {{ user.email }}</p>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     </div>
 {% endblock %}

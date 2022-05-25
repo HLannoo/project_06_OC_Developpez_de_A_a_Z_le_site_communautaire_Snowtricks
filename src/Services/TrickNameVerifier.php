@@ -33,10 +33,12 @@ class TrickNameVerifier extends AbstractController
 
     public function TrickNameCheckUpdate($name,$slug)
     {
+        $name = strtolower(str_replace(' ', '-', $name));
+        $slug = strtolower($slug);
         $trickExist = $this->trickRepository->findBy(array('name' => $name));
         if ($slug == $name ) {
             return true;
-        } elseif($trickExist) {
+        } elseif($trickExist ) {
             return false;
         }
         else {

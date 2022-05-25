@@ -21,13 +21,21 @@
                     </a>
                 {% endif %}
             </div>
-
             <style>
-                {% for image in trick.images|slice (0,1) %}
+                {% if trick.images|slice (0,1) == true %}
+            {% for image in trick.images|slice (0,1) %}
                 .masthead {
-                    background-image: url({{ asset('/uploads/tricks/' ~ image.path )}});
+                    background-image: url({{ asset('/uploads/tricks/' ~ image.path  )}});
                 }
+
+            {% endfor %}
+                {% elseif trick.images|slice (0,1) == false %}
+                .masthead {
+                    background-image: url({{ asset('/uploads/tricks/defaults/default.jpg'   )}});
+                }
+                {% endif %}
             </style>
+            {% for image in trick.images|slice (0,1) %}
             {% if app.user and app.user.isVerified == true %}
                 <a href="{{ path("trick_edit_image",{'id': image.id}) }}" class="btn btn-sm btn-primary p-2">
                     <i class="bi bi-pencil-square"></i>
@@ -148,14 +156,14 @@
     <section id="informations">
         <div class="container">
             <div class=" row justify-content-between text-center text-middle">
-                <div class="col-lg-2 rounded bg-primary text-white ">
+                <div class="col-lg-2 bg-primary text-white ">
                     Créé le : {{ trick.createdAt|date('d-m-Y',"Europe/Paris") }}
                     à {{ trick.createdAt|date('H:i:s',"Europe/Paris") }}</div>
-                <div class="col-lg-2 rounded bg-primary text-white">
+                <div class="col-lg-2 bg-primary text-white">
                     Modifié le :
                     {{ trick.updatedAt|date('d-m-Y',"Europe/Paris") }}
                     à {{ trick.updatedAt|date('H:i:s',"Europe/Paris") }}</div>
-                <div class="col-lg-2 rounded bg-primary text-white">
+                <div class="col-lg-2 bg-primary text-white">
                     Catégorie : {{ trick.category.name }}
                     {% if app.user and app.user.isVerified == true %}
                         <a href="{{ path("trick_edit_category",{'slug': trick.slug}) }}"
@@ -164,7 +172,7 @@
                         </a>
                     {% endif %}
                 </div>
-                <div class="col-lg-2 rounded bg-primary text-white ">
+                <div class="col-lg-2 bg-primary text-white ">
                     Créateur : {{ trick.user.pseudo }}</div>
             </div>
         </div>

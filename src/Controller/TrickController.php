@@ -62,7 +62,6 @@ class TrickController extends AbstractController
 
 
                 $images = $form->get('images')->getData();
-                if (!empty($images)) {
                     foreach ($images as $image) {
 
                         $resultImage = $this->uploadImage->imageRegister($image);
@@ -71,17 +70,10 @@ class TrickController extends AbstractController
                             ->setTrick($trick);
                         $trick->addImage($image);
                     }
-                } else {
-                    $image = new Image();
-                    $image->setPath('default.jpg')
-                        ->setTrick($trick);
-                    $trick->addImage($image);
-                }
                 foreach ($form->get('videos')->getData() as $url) {
                     $trick->addVideo($url);
 
                 }
-
                 $this->manager->persist($trick);
                 $this->manager->flush();
                 $this->addflash(
@@ -250,6 +242,10 @@ class TrickController extends AbstractController
             $trick->setUpdatedAt(new \DateTime('now'));
 
             $this->manager->flush();
+            $this->addflash(
+                'success',
+                "description modifié avec succès !"
+            );
             return $this->redirectToRoute('trick_details', ['slug' => $slug]);
         }
         return $this->render('trick/create_update.html.twig', [
@@ -271,9 +267,14 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $trick->setCategory($form->get('category')->getData());
             $trick->setUpdatedAt(new \DateTime('now'));
 
             $this->manager->flush();
+            $this->addflash(
+                'success',
+                "Catégorie modifié avec succès !"
+            );
             return $this->redirectToRoute('trick_details', ['slug' => $slug]);
         }
         return $this->render('trick/create_update.html.twig', [
