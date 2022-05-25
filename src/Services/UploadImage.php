@@ -25,9 +25,6 @@ class UploadImage
 
 
         return $name;
-
-
-
-
     }
+
 }

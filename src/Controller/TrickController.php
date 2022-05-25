@@ -14,6 +14,7 @@ use App\Repository\CommentRepository;
 use App\Repository\ImageRepository;
 use App\Repository\TrickRepository;
 use App\Repository\VideoRepository;
+use App\Services\TrickNameVerifier;
 use App\Services\UploadImage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,14 +32,16 @@ class TrickController extends AbstractController
     private $uploadImage;
     protected $trickRepository;
     protected $kernel;
+    protected $trickNameVerifier;
 
-    public function __construct(SluggerInterface $slugger, EntityManagerInterface $manager, UploadImage $uploadImage, TrickRepository $trickRepository, KernelInterface $kernel)
+    public function __construct(SluggerInterface $slugger, EntityManagerInterface $manager, UploadImage $uploadImage, TrickRepository $trickRepository, KernelInterface $kernel, TrickNameVerifier $trickNameVerifier)
     {
         $this->slugger = $slugger;
         $this->manager = $manager;
         $this->uploadImage = $uploadImage;
         $this->trickRepository = $trickRepository;
         $this->kernel = $kernel;
+        $this->trickNameVerifier = $trickNameVerifier;
     }
 
     #[Route('user/trick/create', name: 'trick_create')]
@@ -49,38 +52,52 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $trick->setUser($this->getUser());
-            $trick = $form->getData();
+            $trickName = $form->get('name')->getData();
+            $name = $this->trickNameVerifier->TrickNameCheck($trickName, $request);
+            if ($name == true) {
+                $trick = $form->getData();
+                $trick->setUser($this->getUser());
+                $trick->setSlug($this->slugger->slug(strtolower($trickName)));
+                $trick->setCategory($form->get('category')->getData());
 
-            $trick->setCategory($form->get('category')->getData());
-            $trick->setSlug($this->slugger->slug(strtolower($form->get('name')->getData())));
 
-            $images = $form->get('images')->getData();
-            if (!empty($images)) {
-                foreach ($images as $image) {
+                $images = $form->get('images')->getData();
+                if (!empty($images)) {
+                    foreach ($images as $image) {
 
-                    $resultImage = $this->uploadImage->imageRegister($image);
+                        $resultImage = $this->uploadImage->imageRegister($image);
+                        $image = new Image();
+                        $image->setPath($resultImage)
+                            ->setTrick($trick);
+                        $trick->addImage($image);
+                    }
+                } else {
                     $image = new Image();
-                    $image->setPath($resultImage)
+                    $image->setPath('default.jpg')
                         ->setTrick($trick);
                     $trick->addImage($image);
                 }
-            }
-            else {
-                $image = new Image();
-                $image->setPath('default.jpg')
-                    ->setTrick($trick);
-                $trick->addImage($image);
-            }
                 foreach ($form->get('videos')->getData() as $url) {
                     $trick->addVideo($url);
 
                 }
 
-            $this->manager->persist($trick);
-            $this->manager->flush();
-            return $this->redirectToRoute('app_blog');
+                $this->manager->persist($trick);
+                $this->manager->flush();
+                $this->addflash(
+                    'success',
+                    "Le trick a été créé avec succès !"
+                );
+                return $this->redirectToRoute('app_blog');
 
+            } else {
+                $this->addflash(
+                    'error',
+                    "Le nom du trick est déja utilisé !"
+                );
+                return $this->redirectToRoute('trick_create');
+
+            }
         }
         return $this->render('trick/create_update.html.twig', [
             'form' => $form->createView()
@@ -97,27 +114,40 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $trick->setCategory($form->get('category')->getData());
-            $trick->setSlug($this->slugger->slug($form->get('name')->getData()));
-            $trick->setUpdatedAt(new \DateTime('now'));
+            $trickName = $form->get('name')->getData();
+            $checkName = $this->trickNameVerifier->TrickNameCheckUpdate($trickName, $slug);
+
+            if ($checkName == true) {
+                $trick->setCategory($form->get('category')->getData());
+                $trick->setSlug($this->slugger->slug($form->get('name')->getData()));
+                $trick->setUpdatedAt(new \DateTime('now'));
 
 
-            $images = $form->get('images')->getData();
-            foreach ($images as $image) {
+                $images = $form->get('images')->getData();
+                foreach ($images as $image) {
 
-                $resultImage = $this->uploadImage->imageRegister($image);
-                $image = new Image();
-                $image->setPath($resultImage)
-                    ->setTrick($trick);
-                $trick->addImage($image);
+                    $resultImage = $this->uploadImage->imageRegister($image);
+                    $image = new Image();
+                    $image->setPath($resultImage)
+                        ->setTrick($trick);
+                    $trick->addImage($image);
 
-                foreach ($form->get('videos')->getData() as $url) {
-                    $trick->addVideo($url);
+                    foreach ($form->get('videos')->getData() as $url) {
+                        $trick->addVideo($url);
+                    }
                 }
+                $this->manager->flush();
+                return $this->redirectToRoute('trick_details', ['slug' => $slug]);
+            } else {
+                $this->addflash(
+                    'error',
+                    "Le nom du trick est déja utilisé !"
+                );
+                return $this->redirectToRoute('trick_edit', ['slug' => $slug]);
+
             }
-            $this->manager->flush();
-            return $this->redirectToRoute('trick_details', ['slug' => $slug]);
         }
+
         return $this->render('trick/create_update.html.twig', [
             'trick' => $trick,
             'form' => $form->createView()
@@ -173,17 +203,30 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $trick->setSlug($this->slugger->slug(strtolower($form->get('name')->getData())));
-            $trick->setUpdatedAt(new \DateTime('now'));
-            $this->manager->persist($trick);
-            $this->manager->flush();
+            $trickName = $form->get('name')->getData();
+            $checkName = $this->trickNameVerifier->TrickNameCheckUpdate($trickName, $slug);
 
-            $this->addflash(
-                'success',
-                "Le trick a été renommé avec succès !"
-            );
+            if ($checkName == true) {
+                $trick->setSlug($this->slugger->slug(strtolower($form->get('name')->getData())));
+                $trick->setUpdatedAt(new \DateTime('now'));
+                $this->manager->persist($trick);
+                $this->manager->flush();
 
-            return $this->redirectToRoute('app_blog');
+                $this->addflash(
+                    'success',
+                    "Le trick a été renommé avec succès !"
+                );
+
+                return $this->redirectToRoute('app_blog');
+            } else {
+                $this->addflash(
+                    'error',
+                    "Le nom du trick est déja utilisé !"
+                );
+                return $this->redirectToRoute('trick_edit_name', ['slug' => $slug]);
+
+            }
+
         }
         return $this->render('trick/create_update.html.twig', [
             'trick' => $trick,
@@ -192,7 +235,7 @@ class TrickController extends AbstractController
     }
 
     #[Route('user/trick/edit/description/{slug}', name: 'trick_edit_description')]
-    public function editDescription($slug,Request $request)
+    public function editDescription($slug, Request $request)
     {
         $trick = $this->trickRepository->findOneBy(['slug' => $slug]);
         $form = $this->createForm(TrickType::class, $trick);
