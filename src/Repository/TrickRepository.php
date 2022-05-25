@@ -17,7 +17,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class TrickRepository extends ServiceEntityRepository
 {
-    public const PAGINATOR_PER_PAGE = 15;
+    public const PAGINATOR_PER_PAGE = 30;
 
     public function __construct(ManagerRegistry $registry)
     {

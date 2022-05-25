@@ -47,12 +47,8 @@ class RegistrationController extends AbstractController
             );
             if (!empty($mainImage = $form->get('mainImage')->getData())) {
                 $resultImage = $uploadImage->profilImageRegister($mainImage);
+                $user->setImage($resultImage);
             }
-            else {
-                $resultImage = '/defaults/unknow.jpg';
-
-            }
-            $user->setImage($resultImage);
 
             $entityManager->persist($user);
             $entityManager->flush();
