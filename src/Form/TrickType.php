@@ -12,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\All;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
 
 class TrickType extends AbstractType
@@ -34,12 +36,22 @@ class TrickType extends AbstractType
             ->add('images', FileType::class, [
                 'label' => 'Images (La première image sera la principale - Taille max.: ' . ini_get('post_max_size') . ')',
                 'required' => false,
-                'mapped'=>false,
+                'mapped' => false,
                 'multiple' => true,
-                'attr'     => [
-                    'accept' => 'image/*',
+                'constraints' => [
+                    new All([
+                        'constraints' => [
+                            new File([
+                                'mimeTypes' => [
+                                    'image/jpeg',
+                                    'image/png',
+                                    'image/jpg',
+                                ],
+                                'mimeTypesMessage' => "L'image envoyée ne semble pas valide!",
+                            ])
+                        ],
+                    ])
                 ]
-
             ])
             ->add('videos', CollectionType::class, [
                 'entry_type' => VideoType::class,

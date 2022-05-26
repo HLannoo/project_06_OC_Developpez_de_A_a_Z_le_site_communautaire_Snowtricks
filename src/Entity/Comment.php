@@ -13,7 +13,7 @@ class Comment
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'string')]
     private $content;
 
     #[ORM\Column(type: 'datetime')]
