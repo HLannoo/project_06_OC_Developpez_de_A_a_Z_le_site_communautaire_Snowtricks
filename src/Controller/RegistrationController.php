@@ -40,7 +40,7 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(
-            $userPasswordHasher->hashPassword(
+                $userPasswordHasher->hashPassword(
                     $user,
                     $form->get('plainPassword')->getData()
                 )
@@ -73,11 +73,11 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator, ChangeRoles $roles,EntityManagerInterface $manager, UserRepository $userRepository): Response
+    public function verifyUserEmail(Request $request, TranslatorInterface $translator, ChangeRoles $roles, EntityManagerInterface $manager, UserRepository $userRepository): Response
     {
 
         $token = $request->get('token');
-        $user = $userRepository->findOneBy(['token'=>$token]);
+        $user = $userRepository->findOneBy(['token' => $token]);
 
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $user);
@@ -86,7 +86,7 @@ class RegistrationController extends AbstractController
 
             return $this->redirectToRoute('security_registration');
         }
-        $roles->upgradeGuest($user,$manager);
+        $roles->upgradeGuest($user);
         $this->addFlash('success', 'Votre e-mail a bien été vérifié');
         return $this->redirectToRoute('security_login');
     }

@@ -18,9 +18,10 @@ class IndexController extends AbstractController
         $offset = max(0, $request->query->getInt('offset', 0));
         $paginator = $tricksRepo->getTrickPaginator($offset);
         return $this->render('blog/index.html.twig', [
-            'tricks'=>$paginator,
+            'tricks' => $paginator,
             'previous' => $offset - TrickRepository::PAGINATOR_PER_PAGE,
             'next' => min(count($paginator), $offset + TrickRepository::PAGINATOR_PER_PAGE)
         ]);
     }
+
 }

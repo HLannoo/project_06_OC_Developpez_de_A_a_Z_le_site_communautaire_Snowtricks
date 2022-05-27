@@ -2,26 +2,29 @@
 
 namespace App\Services;
 
+
+use Symfony\Component\HttpFoundation\File\File;
+
 class UploadImage
 {
-    public function imageRegister($file)
+    public function imageRegister(File $file)
     {
 
-        $name = md5(uniqid()).'.'.$file->guessExtension();
+        $name = md5(uniqid()) . '.' . $file->guessExtension();
 
-        $path ='uploads/tricks' ;
-        $file->move($path,$name);
+        $path = 'uploads/tricks';
+        $file->move($path, $name);
 
         return $name;
 
     }
 
-    public function profilImageRegister($file)
+    public function profilImageRegister(File $file)
     {
-        $name = md5(uniqid()).'.'.$file->guessExtension();
+        $name = md5(uniqid()) . '.' . $file->guessExtension();
 
-        $path ='uploads/profil' ;
-        $file->move($path,$name);
+        $path = 'uploads/profil';
+        $file->move($path, $name);
 
 
         return $name;

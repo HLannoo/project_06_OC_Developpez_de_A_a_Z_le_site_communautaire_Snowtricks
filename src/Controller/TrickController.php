@@ -321,7 +321,7 @@ class TrickController extends AbstractController
     }
 
     #[Route('user/trick/add/videos/{slug}', name: 'trick_add_videos')]
-    public function AddVids($slug, Request $request)
+    public function addVid($slug, Request $request)
     {
         $trick = $this->trickRepository->findOneBy(['slug' => $slug]);
         $form = $this->createForm(TrickType::class);
