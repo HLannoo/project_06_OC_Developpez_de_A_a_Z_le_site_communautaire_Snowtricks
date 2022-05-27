@@ -42,3 +42,5 @@ The libraries were installed via composer, please install it:
 ## About bootsrap template
 
 For this project, I used bootsrap and bootstwatch template: https://bootswatch.com/
+
+Codacy Badge
