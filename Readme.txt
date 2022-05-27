@@ -3,6 +3,8 @@ Code quality has been validated by Codacy. You can access the inspection report 
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/495c5ee03f7540e483ca493c2d4a1dcb)](https://www.codacy.com/gh/Kakahuette400/project_06/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Kakahuette400/project_06&amp;utm_campaign=Badge_Grade)
 
+<a href="https://www.codacy.com/gh/Kakahuette400/project_06/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Kakahuette400/project_06&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/495c5ee03f7540e483ca493c2d4a1dcb"/></a>
+
 ## Installation
 - PHP 8.0.13
 - MySql 5.7.36
