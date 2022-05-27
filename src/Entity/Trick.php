@@ -97,7 +97,7 @@ class Trick
 
     public function setCreatedAt(): self
     {
-        if ($this->createdAt == null) $this->createdAt = new \DateTime('now');
+        if ($this->createdAt === null) $this->createdAt = new \DateTime('now');
 
 
         return $this;
